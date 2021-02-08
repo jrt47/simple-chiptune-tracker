@@ -19,3 +19,13 @@ choice.
 As someone who is interested in music as a hobby, this project is very compelling. I have been interested in using
 old-style chiptune sounds in the past, but the technical complexity of modern-day tracking software has always been a
 barrier. I am excited to start using the application when it is finished.
+
+## User Stories
+
+- As a user, I want to be able to add a note to an instrument channel
+- As a user, I want to be able to mark a note as either staccato or legato
+- As a user, I want to be able to view all the notes placed in my track
+- As a user, I want to be able to edit the pitch of a note in my track
+- As a user, I want to be able to delete a note from my track
+- As a user, I want to be able to choose the tempo of my track
+- As a user, I want to be able to play my track
