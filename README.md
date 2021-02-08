@@ -7,9 +7,8 @@ This application will allow users to make music using simple waveforms in an aut
 additional complexities of professional music tracker software. The application is intended for anyone who wants to
 make old-style chiptune music but has little experience using music trackers.
 
-Users will be able to program up to five instrument channels, including:
+Users will be able to program up to four instrument channels, including:
 - Two pulse waves of variable duty cycle
-- A sawtooth wave
 - A triangle wave
 - A noise generator
 
@@ -22,10 +21,13 @@ barrier. I am excited to start using the application when it is finished.
 
 ## User Stories
 
-- As a user, I want to be able to add a note to an instrument channel
+- As a user, I want to be able to create a new track
+- As a user, I want to be able to set the name of my track
+- As a user, I want to be able to add a note to an instrument channel in my track
 - As a user, I want to be able to mark a note as either staccato or legato
+- As a user, I want to be able to set the pitch of a note in my track
 - As a user, I want to be able to view all the notes placed in my track
-- As a user, I want to be able to edit the pitch of a note in my track
 - As a user, I want to be able to delete a note from my track
+- As a user, I want to be able to choose the duty cycle of the pulse wave instrument tracks
 - As a user, I want to be able to choose the tempo of my track
 - As a user, I want to be able to play my track
