@@ -26,6 +26,7 @@ barrier. I am excited to start using the application when it is finished.
 - As a user, I want to be able to add a note to an instrument channel in my track
 - As a user, I want to be able to mark a note as either staccato or legato
 - As a user, I want to be able to set the pitch of a note in my track
+- As a user, I want to be able to transpose my track or a channel in my track by a given number of semitones
 - As a user, I want to be able to view all the notes placed in my track
 - As a user, I want to be able to delete a note from my track
 - As a user, I want to be able to choose the duty cycle of the pulse wave instrument tracks
