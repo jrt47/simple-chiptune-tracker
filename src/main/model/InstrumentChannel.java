@@ -29,7 +29,7 @@ public class InstrumentChannel {
 
     // MODIFIES: this
     // EFFECTS: clears all events in the channel
-    public void clearAll() {
+    public void clear() {
         // stub
     }
 
@@ -61,6 +61,6 @@ public class InstrumentChannel {
 
     // EFFECTS: returns the number of bars in the channel
     public int numberOfBars() {
-        return 0; // return
+        return 0; // stub
     }
 }

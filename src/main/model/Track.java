@@ -52,46 +52,59 @@ public class Track {
     // MODIFIES: this
     // EFFECTS: clears all events in the track between startRow and endRow (inclusive),
     //          do nothing to rows that do not exist
-    public void clearRows(int startRow, int endRow) {
+    public void clear(int startRow, int endRow) {
         // stub
     }
 
     // REQUIRES: 1 <= channel <= 4
     // MODIFIES: this
     // EFFECTS: clears all events in the given channel
-    public void clearChannel(int channel) {
+    public void clear(int channel) {
         // stub
     }
 
     // MODIFIES: this
     // EFFECTS: clears all events in the track
-    public void clearAll() {
+    public void clear() {
         // stub
     }
 
     // REQUIRES: 1 <= channel <= 4
     // MODIFIES: this
     // EFFECTS: transposes all the notes in given channel by numSemitones
-    public void transposeChannel(int channel, int numSemitones) {
+    public void transpose(int channel, int numSemitones) {
         // stub
     }
 
     // MODIFIES: this
     // EFFECTS: transposes all the notes in the track by numSemitones
-    public void transposeAll(int numSemitones) {
+    public void transpose(int numSemitones) {
         // stub
     }
 
     // REQUIRES 1 <= channel <= 4
     // MODIFIES: this
-    // EFFECTS: transposes all the notes in given channel by numOctaves octaves
-    public void transposeChannelByOctave(int channel, int numOctaves) {
+    // EFFECTS: transposes all the notes in given channel up by an octave
+    public void transposeUpByOctave(int channel) {
         // stub
     }
 
     // MODIFIES: this
-    // EFFECTS: transposes all the notes in the track by numOctaves octaves
-    public void transposeAllByOctave(int numOctaves) {
+    // EFFECTS: transposes all the notes in the track up by an octave
+    public void transposeUpByOctave() {
+        // stub
+    }
+
+    // REQUIRES: 1 <= channel <= 4
+    // MODIFIES: this
+    // EFFECTS: transposes all the notes in given channel down by an octave
+    public void transposeDownByOctave(int channel) {
+        // stub
+    }
+
+    // MODIFIES: this
+    // EFFECTS: transposes all the notes in the track down by an octave
+    public void transposeDownByOctave() {
         // stub
     }
 
@@ -111,6 +124,12 @@ public class Track {
 
     // EFFECTS: returns the number of bars in the track
     public int numberOfBars() {
-        return 0; // return
+        return 0; // stub
+    }
+
+    // REQUIRES: 1 <= channelNum <= 4
+    // EFFECTS: returns the Instrument channel corresponding to the given number
+    private InstrumentChannel getChannel(int channelNum) {
+        return null; // stub
     }
 }
