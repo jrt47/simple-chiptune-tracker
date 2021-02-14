@@ -28,14 +28,32 @@ class TrackTest {
     @Test
     void testConstructor() {
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
-        assertEquals("track", track.getTrackName());
-        assertEquals(120, track.getTempo());
+        assertEquals("track", track.getName());
+        assertEquals(Track.DEFAULT_BPM, track.getTempo());
         for (int i = 1; i <= InstrumentChannel.INITIAL_NUM_OF_BARS * InstrumentChannel.ROWS_PER_BAR; i++) {
             assertTrue(event.isIdenticalTo(track.getEvent("pulse1", i)));
             assertTrue(event.isIdenticalTo(track.getEvent("pulse2", i)));
             assertTrue(event.isIdenticalTo(track.getEvent("triangle", i)));
             assertTrue(event.isIdenticalTo(track.getEvent("noise", i)));
         }
+    }
+
+    @Test
+    void testSetName() {
+        track.setName("song");
+        assertEquals("song", track.getName());
+
+        track.setName("piece");
+        assertEquals("piece", track.getName());
+    }
+
+    @Test
+    void testSetTemp() {
+        track.setTempo(80);
+        assertEquals(80, track.getTempo());
+
+        track.setTempo(110);
+        assertEquals(110, track.getTempo());
     }
 
     @Test

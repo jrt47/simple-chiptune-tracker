@@ -1,7 +1,9 @@
 package model;
 
 public class Track {
-    private String trackName;
+    public static final int DEFAULT_BPM = 120;
+
+    private String name;
     private int tempo;
     private InstrumentChannel pulse1;
     private InstrumentChannel pulse2;
@@ -11,28 +13,28 @@ public class Track {
     // REQUIRES: trackName has a length greater than 0
     // EFFECTS: creates a new empty 2 bar track with name trackName at 120 BPM
     public Track(String name) {
-        trackName = name;
-        tempo = 120;
+        this.name = name;
+        tempo = DEFAULT_BPM;
         pulse1 = new InstrumentChannel();
         pulse2 = new InstrumentChannel();
         triangle = new InstrumentChannel();
         noise = new InstrumentChannel();
     }
 
-    public String getTrackName() {
-        return trackName;
+    public String getName() {
+        return name;
     }
 
     public int getTempo() {
         return tempo;
     }
 
-    public void setTrackName(String name) {
-        trackName = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setTempo(int bpm) {
-        tempo = bpm;
+    public void setTempo(int tempo) {
+        this.tempo = tempo;
     }
 
     // REQUIRES: numBars > 0
