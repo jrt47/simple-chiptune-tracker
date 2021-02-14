@@ -1,135 +1,205 @@
 package model;
 
 public class Track {
+    private String trackName;
+    private int tempo;
+    private InstrumentChannel pulse1;
+    private InstrumentChannel pulse2;
+    private InstrumentChannel triangle;
+    private InstrumentChannel noise;
 
     // REQUIRES: trackName has a length greater than 0
-    // EFFECTS: creates a new empty 2 bar track with name trackName
-    public Track(String trackName) {
-        // stub
+    // EFFECTS: creates a new empty 2 bar track with name trackName at 120 BPM
+    public Track(String name) {
+        trackName = name;
+        tempo = 120;
+        pulse1 = new InstrumentChannel();
+        pulse2 = new InstrumentChannel();
+        triangle = new InstrumentChannel();
+        noise = new InstrumentChannel();
     }
 
-    // getters:
-    public int getTrackName() {
-        return 0; // stub
+    public String getTrackName() {
+        return trackName;
     }
 
     public int getTempo() {
-        return 0; // stub
+        return tempo;
     }
 
-    // setters:
     public void setTrackName(String name) {
-        // stub
+        trackName = name;
     }
 
     public void setTempo(int bpm) {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4; row >= 1
-    // MODIFIES: this
-    // EFFECTS: places given note into given channel at given row, if row does not exist do nothing
-    public void addEvent(int channel, int row, Event event) {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4; row >= 1
-    // MODIFIES: this
-    // EFFECTS: clears the event in the given channel at the given row, if row does not exist do nothing
-    public void clearEvent(int channel, int row) {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4; startRow/endRow >= 1; endRow > startRow
-    // MODIFIES: this
-    // EFFECTS: clears all events in the given channel between startRow and endRow (inclusive),
-    //          do nothing to rows that do not exist
-    public void clear(int channel, int startRow, int endRow) {
-        // stub
-    }
-
-    // REQUIRES: startRow/endRow >= 1
-    // MODIFIES: this
-    // EFFECTS: clears all events in the track between startRow and endRow (inclusive),
-    //          do nothing to rows that do not exist
-    public void clear(int startRow, int endRow) {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4
-    // MODIFIES: this
-    // EFFECTS: clears all events in the given channel
-    public void clear(int channel) {
-        // stub
-    }
-
-    // MODIFIES: this
-    // EFFECTS: clears all events in the track
-    public void clear() {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in given channel by numSemitones
-    public void transpose(int channel, int numSemitones) {
-        // stub
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in the track by numSemitones
-    public void transpose(int numSemitones) {
-        // stub
-    }
-
-    // REQUIRES 1 <= channel <= 4
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in given channel up by an octave
-    public void transposeUpByOctave(int channel) {
-        // stub
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in the track up by an octave
-    public void transposeUpByOctave() {
-        // stub
-    }
-
-    // REQUIRES: 1 <= channel <= 4
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in given channel down by an octave
-    public void transposeDownByOctave(int channel) {
-        // stub
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transposes all the notes in the track down by an octave
-    public void transposeDownByOctave() {
-        // stub
+        tempo = bpm;
     }
 
     // REQUIRES: numBars > 0
     // MODIFIES: this
     // EFFECTS: adds numBars bars to the track
     public void addBars(int numBars) {
-        // stub
+        pulse1.addBars(numBars);
+        pulse2.addBars(numBars);
+        triangle.addBars(numBars);
+        noise.addBars(numBars);
     }
 
-    // REQUIRES: numBars > 0
+    // REQUIRES: 0 < numBars < numberOfBars()
     // MODIFIES: this
     // EFFECTS: removes numBars bars from the track
     public void removeBars(int numBars) {
-        // stub
+        pulse1.removeBars(numBars);
+        pulse2.removeBars(numBars);
+        triangle.removeBars(numBars);
+        noise.removeBars(numBars);
+    }
+
+    // EFFECTS: returns the number of rows in the track
+    public int numberOfRows() {
+        return pulse1.numberOfRows();
     }
 
     // EFFECTS: returns the number of bars in the track
     public int numberOfBars() {
-        return 0; // stub
+        return pulse1.numberOfBars();
     }
 
-    // REQUIRES: 1 <= channelNum <= 4
-    // EFFECTS: returns the Instrument channel corresponding to the given number
-    private InstrumentChannel getChannel(int channelNum) {
-        return null; // stub
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // EFFECTS: returns the event at the given row in the given channel
+    public Event getEvent(String channel, int row) {
+        return getChannel(channel).getEvent(row);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // MODIFIES: this
+    // EFFECTS: places a note with given pitch into given channel at given row
+    public void addNote(String channel, int row, int pitch) {
+        getChannel(channel).addNote(row, pitch);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // MODIFIES: this
+    // EFFECTS: places a rest into given channel at given row
+    public void addRest(String channel, int row) {
+        getChannel(channel).addRest(row);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // MODIFIES: this
+    // EFFECTS: makes the note in given channel at given row staccato
+    public void makeStaccato(String channel, int row) {
+        getChannel(channel).makeStaccato(row);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // MODIFIES: this
+    // EFFECTS: makes the note in given channel at given row not staccato
+    public void makeNotStaccato(String channel, int row) {
+        getChannel(channel).makeNotStaccato(row);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
+    // MODIFIES: this
+    // EFFECTS: clears the event in given channel at given row
+    public void clear(String channel, int row) {
+        getChannel(channel).clear(row);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise",
+    //           1 <= startRow/endRow <= numberOfRows(), endRow >= startRow
+    // MODIFIES: this
+    // EFFECTS: clears all events in the given channel between startRow and endRow (inclusive)
+    public void clear(String channel, int startRow, int endRow) {
+        getChannel(channel).clear(startRow, endRow);
+    }
+
+    // REQUIRES: 1 <= startRow/endRow <= numberOfRows(), endRow >= startRow
+    // MODIFIES: this
+    // EFFECTS: clears all events between startRow and endRow (inclusive)
+    public void clear(int startRow, int endRow) {
+        pulse1.clear(startRow, endRow);
+        pulse2.clear(startRow, endRow);
+        triangle.clear(startRow, endRow);
+        noise.clear(startRow, endRow);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"
+    // MODIFIES: this
+    // EFFECTS: clears all events in the given channel
+    public void clear(String channel) {
+        getChannel(channel).clear();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: clears all events in the track
+    public void clear() {
+        pulse1.clear();
+        pulse2.clear();
+        triangle.clear();
+        noise.clear();
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the given channel by numSemitones semitones
+    public void transpose(String channel, int numSemitones) {
+        getChannel(channel).transpose(numSemitones);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the track by numSemitones semitones
+    public void transpose(int numSemitones) {
+        pulse1.transpose(numSemitones);
+        pulse2.transpose(numSemitones);
+        triangle.transpose(numSemitones);
+        noise.transpose(numSemitones);
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the given channel up by an octave
+    public void transposeUpByOctave(String channel) {
+        getChannel(channel).transposeUpByOctave();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the track up by an octave
+    public void transposeUpByOctave() {
+        pulse1.transposeUpByOctave();
+        pulse2.transposeUpByOctave();
+        triangle.transposeUpByOctave();
+        noise.transposeUpByOctave();
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the given channel down by an octave
+    public void transposeDownByOctave(String channel) {
+        getChannel(channel).transposeDownByOctave();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: transposes all notes in the track down by an octave
+    public void transposeDownByOctave() {
+        pulse1.transposeDownByOctave();
+        pulse2.transposeDownByOctave();
+        triangle.transposeDownByOctave();
+        noise.transposeDownByOctave();
+    }
+
+    // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"
+    // EFFECTS: returns the channel corresponding to the given string
+    private InstrumentChannel getChannel(String channel) {
+        switch (channel) {
+            case "pulse1":
+                return pulse1;
+            case "pulse2":
+                return pulse2;
+            case "triangle":
+                return triangle;
+            default:
+                return noise;
+        }
     }
 }
