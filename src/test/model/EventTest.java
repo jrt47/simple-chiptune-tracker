@@ -83,21 +83,21 @@ public class EventTest {
     @Test
     void testMakeStaccatoBlank() {
         event.clear();
-        event.makeStaccato();
+        assertFalse(event.makeStaccato());
         assertFalse(event.getIsStaccato());
     }
 
     @Test
     void testMakeStaccatoRest() {
         event.makeRest();
-        event.makeStaccato();
+        assertFalse(event.makeStaccato());
         assertFalse(event.getIsStaccato());
     }
 
     @Test
     void testMakeStaccatoNote() {
         event.makeNote(12);
-        event.makeStaccato();
+        assertTrue(event.makeStaccato());
         assertTrue(event.getIsStaccato());
     }
 
@@ -105,21 +105,21 @@ public class EventTest {
     void testMakeStaccatoNoteAlreadyStaccato() {
         event.makeNote(12);
         event.makeStaccato();
-        event.makeStaccato();
+        assertTrue(event.makeStaccato());
         assertTrue(event.getIsStaccato());
     }
 
     @Test
     void testMakeNotStaccatoBlank() {
         event.clear();
-        event.makeNotStaccato();
+        assertFalse(event.makeNotStaccato());
         assertFalse(event.getIsStaccato());
     }
 
     @Test
     void testMakeNotStaccatoRest() {
         event.makeRest();
-        event.makeNotStaccato();
+        assertFalse(event.makeNotStaccato());
         assertFalse(event.getIsStaccato());
     }
 
@@ -127,14 +127,14 @@ public class EventTest {
     void testMakeNotStaccatoNote() {
         event.makeNote(3);
         event.makeStaccato();
-        event.makeNotStaccato();
+        assertTrue(event.makeNotStaccato());
         assertFalse(event.getIsStaccato());
     }
 
     @Test
     void testMakeNotStaccatoNoteAlreadyNotStaccato() {
         event.makeNote(1);
-        event.makeNotStaccato();
+        assertTrue(event.makeNotStaccato());
         assertFalse(event.getIsStaccato());
     }
 

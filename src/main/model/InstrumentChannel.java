@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents an instrument channel inside of a track
+// Instrument channels have a set amount of bars and can have notes or rests placed in them
 public class InstrumentChannel {
     public static final int INITIAL_NUM_OF_BARS = 2;
     public static final int ROWS_PER_BAR = 16;
@@ -67,16 +69,16 @@ public class InstrumentChannel {
 
     // REQUIRES: 1 <= row <= numberOfRows()
     // MODIFIES: this
-    // EFFECTS: makes the note at the given row staccato
-    public void makeStaccato(int row) {
-        eventList.get(row - 1).makeStaccato();
+    // EFFECTS: if event at given row is a note, make it staccato and return true, otherwise return false
+    public boolean makeStaccato(int row) {
+        return eventList.get(row - 1).makeStaccato();
     }
 
     // REQUIRES: 1 <= row <= numberOfRows()
     // MODIFIES: this
-    // EFFECTS: makes the note at the given row not staccato
-    public void makeNotStaccato(int row) {
-        eventList.get(row - 1).makeNotStaccato();
+    // EFFECTS: if event at given row is a note, make it not staccato and return true, otherwise return false
+    public boolean makeNotStaccato(int row) {
+        return eventList.get(row - 1).makeNotStaccato();
     }
 
     // REQUIRES: 1 <= row <= numberOfRows()

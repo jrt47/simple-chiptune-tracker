@@ -1,7 +1,11 @@
 package model;
 
+// Represents an event that can be placed inside a track
+// Can be a note, a rest, or a blank event
+// Notes have a pitch and can be staccato or not staccato
 public class Event {
-    public static final int MAX_PITCH = 36;
+    public static final int NUM_OCTAVES = 3;
+    public static final int MAX_PITCH = NUM_OCTAVES * 12;
 
     private String type;
     private int pitch;
@@ -52,18 +56,24 @@ public class Event {
     }
 
     // MODIFIES: this
-    // EFFECTS: if the event is a note, make it staccato
-    public void makeStaccato() {
+    // EFFECTS: if the event is a note, make it staccato and return true, otherwise return false
+    public boolean makeStaccato() {
         if (type.equals("note")) {
             isStaccato = true;
+            return true;
+        } else {
+            return false;
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: if the event is a note, make it not staccato
-    public void makeNotStaccato() {
+    // EFFECTS: if the event is a note, make it not staccato and return true, otherwise return false
+    public boolean makeNotStaccato() {
         if (type.equals("note")) {
             isStaccato = false;
+            return true;
+        } else {
+            return false;
         }
     }
 

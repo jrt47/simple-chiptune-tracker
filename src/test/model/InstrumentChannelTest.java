@@ -118,7 +118,7 @@ public class InstrumentChannelTest {
 
     @Test
     void testMakeStaccatoBlank() {
-        channel.makeStaccato(8);
+        assertFalse(channel.makeStaccato(8));
         assertTrue(event.isIdenticalTo(channel.getEvent(8)));
     }
 
@@ -126,7 +126,7 @@ public class InstrumentChannelTest {
     void testMakeStaccatoRest() {
         event.makeRest();
         channel.addRest(10);
-        channel.makeStaccato(10);
+        assertFalse(channel.makeStaccato(10));
         assertTrue(event.isIdenticalTo(channel.getEvent(10)));
     }
 
@@ -135,7 +135,7 @@ public class InstrumentChannelTest {
         event.makeNote(5);
         event.makeStaccato();
         channel.addNote(2, 5);
-        channel.makeStaccato(2);
+        assertTrue(channel.makeStaccato(2));
         assertTrue(event.isIdenticalTo(channel.getEvent(2)));
     }
 
@@ -145,13 +145,13 @@ public class InstrumentChannelTest {
         event.makeStaccato();
         channel.addNote(16, 4);
         channel.makeStaccato(16);
-        channel.makeStaccato(16);
+        assertTrue(channel.makeStaccato(16));
         assertTrue(event.isIdenticalTo(channel.getEvent(16)));
     }
 
     @Test
     void testMakeNotStaccatoBlank() {
-        channel.makeNotStaccato(14);
+        assertFalse(channel.makeNotStaccato(14));
         assertTrue(event.isIdenticalTo(channel.getEvent(14)));
     }
 
@@ -159,7 +159,7 @@ public class InstrumentChannelTest {
     void testMakeNotStaccatoRest() {
         event.makeRest();
         channel.addRest(16);
-        channel.makeNotStaccato(16);
+        assertFalse(channel.makeNotStaccato(16));
         assertTrue(event.isIdenticalTo(channel.getEvent(16)));
     }
 
@@ -167,16 +167,16 @@ public class InstrumentChannelTest {
     void testMakeNotStaccatoNoteNotStaccato() {
         event.makeNote(11);
         channel.addNote(3, 11);
-        channel.makeNotStaccato(3);
+        assertTrue(channel.makeNotStaccato(3));
         assertTrue(event.isIdenticalTo(channel.getEvent(3)));
     }
 
     @Test
-    void testRemoveEffectNoteStaccato() {
+    void testMakeNotStaccatoNoteStaccato() {
         event.makeNote(20);
         channel.addNote(12, 20);
         channel.makeStaccato(12);
-        channel.makeNotStaccato(12);
+        assertTrue(channel.makeNotStaccato(12));
         assertTrue(event.isIdenticalTo(channel.getEvent(12)));
     }
 

@@ -1,5 +1,8 @@
 package model;
 
+// Represents a music track
+// Tracks have a name, tempo,
+// and have four instrument channels: pulse 1, pulse 2, triangle, and noise
 public class Track {
     public static final int DEFAULT_BPM = 120;
 
@@ -89,16 +92,18 @@ public class Track {
 
     // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
     // MODIFIES: this
-    // EFFECTS: makes the note in given channel at given row staccato
-    public void makeStaccato(String channel, int row) {
-        getChannel(channel).makeStaccato(row);
+    // EFFECTS: if event at given row in given channel is a note, make it staccato and return true,
+    //          otherwise return false
+    public boolean makeStaccato(String channel, int row) {
+        return getChannel(channel).makeStaccato(row);
     }
 
     // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()
     // MODIFIES: this
-    // EFFECTS: makes the note in given channel at given row not staccato
-    public void makeNotStaccato(String channel, int row) {
-        getChannel(channel).makeNotStaccato(row);
+    // EFFECTS: if event at given row in given channel is a note, make it not staccato and return true,
+    //          otherwise return false
+    public boolean makeNotStaccato(String channel, int row) {
+        return getChannel(channel).makeNotStaccato(row);
     }
 
     // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise", 1 <= row <= numberOfRows()

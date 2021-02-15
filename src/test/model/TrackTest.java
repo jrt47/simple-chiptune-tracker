@@ -157,7 +157,7 @@ class TrackTest {
 
     @Test
     void testMakeStaccatoBlank() {
-        track.makeStaccato("pulse2", 8);
+        assertFalse(track.makeStaccato("pulse2", 8));
         assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 8)));
     }
 
@@ -165,7 +165,7 @@ class TrackTest {
     void testMakeStaccatoRest() {
         event.makeRest();
         track.addRest("triangle", 10);
-        track.makeStaccato("triangle", 10);
+        assertFalse(track.makeStaccato("triangle", 10));
         assertTrue(event.isIdenticalTo(track.getEvent("triangle", 10)));
     }
 
@@ -174,23 +174,23 @@ class TrackTest {
         event.makeNote(5);
         event.makeStaccato();
         track.addNote("noise", 2, 5);
-        track.makeStaccato("noise", 2);
+        assertTrue(track.makeStaccato("noise", 2));
         assertTrue(event.isIdenticalTo(track.getEvent("noise", 2)));
     }
 
     @Test
-    void testMakeStaccatoAlreadyStaccato() {
+    void testMakeStaccatoNoteAlreadyStaccato() {
         event.makeNote(4);
         event.makeStaccato();
         track.addNote("pulse1", 16, 4);
         track.makeStaccato("pulse1", 16);
-        track.makeStaccato("pulse1", 16);
+        assertTrue(track.makeStaccato("pulse1", 16));
         assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 16)));
     }
 
     @Test
     void testMakeNotStaccatoBlank() {
-        track.makeNotStaccato("pulse2", 14);
+        assertFalse(track.makeNotStaccato("pulse2", 14));
         assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 14)));
     }
 
@@ -198,7 +198,7 @@ class TrackTest {
     void testMakeNotStaccatoRest() {
         event.makeRest();
         track.addRest("triangle", 16);
-        track.makeNotStaccato("triangle", 16);
+        assertFalse(track.makeNotStaccato("triangle", 16));
         assertTrue(event.isIdenticalTo(track.getEvent("triangle", 16)));
     }
 
@@ -206,16 +206,16 @@ class TrackTest {
     void testMakeNotStaccatoNoteNotStaccato() {
         event.makeNote(11);
         track.addNote("noise", 3, 11);
-        track.makeNotStaccato("noise", 3);
+        assertTrue(track.makeNotStaccato("noise", 3));
         assertTrue(event.isIdenticalTo(track.getEvent("noise", 3)));
     }
 
     @Test
-    void testRemoveEffectNoteStaccato() {
+    void testMakeNotStaccatoNoteStaccato() {
         event.makeNote(20);
         track.addNote("pulse1", 12, 20);
         track.makeStaccato("pulse1", 12);
-        track.makeNotStaccato("pulse1", 12);
+        assertTrue(track.makeNotStaccato("pulse1", 12));
         assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 12)));
     }
 
