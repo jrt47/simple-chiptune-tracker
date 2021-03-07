@@ -32,6 +32,13 @@ public class Tracker implements Writable {
         trackList.add(track);
     }
 
+    // REQUIRES: 0 < pos < numberOfTracks()
+    // MODIFIES: this
+    // EFFECTS: removes the track at the given position from the tracker
+    public void remove(int pos) {
+        trackList.remove(pos - 1);
+    }
+
     // EFFECTS: returns the track in the tracker at the given position, if no such track exists return null
     public Track get(int pos) {
         if (pos < 1 || pos > numberOfTracks()) {

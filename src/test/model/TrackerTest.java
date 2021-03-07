@@ -58,6 +58,45 @@ public class TrackerTest {
     }
 
     @Test
+    void testRemoveOne() {
+        tracker.add(track1);
+        tracker.add(track2);
+        tracker.add(track3);
+        tracker.remove(1);
+        assertEquals(2, tracker.numberOfTracks());
+        assertFalse(tracker.contains(track1));
+        assertTrue(tracker.contains(track2));
+        assertTrue(tracker.contains(track3));
+    }
+
+    @Test
+    void testRemoveTwo() {
+        tracker.add(track1);
+        tracker.add(track2);
+        tracker.add(track3);
+        tracker.remove(1);
+        tracker.remove(2);
+        assertEquals(1, tracker.numberOfTracks());
+        assertFalse(tracker.contains(track1));
+        assertTrue(tracker.contains(track2));
+        assertFalse(tracker.contains(track3));
+    }
+
+    @Test
+    void testRemoveThree() {
+        tracker.add(track1);
+        tracker.add(track2);
+        tracker.add(track3);
+        tracker.remove(3);
+        tracker.remove(2);
+        tracker.remove(1);
+        assertEquals(0, tracker.numberOfTracks());
+        assertFalse(tracker.contains(track1));
+        assertFalse(tracker.contains(track2));
+        assertFalse(tracker.contains(track3));
+    }
+
+    @Test
     void testGetPositionEmpty() {
         assertNull(tracker.get(1));
         assertNull(tracker.get(2));

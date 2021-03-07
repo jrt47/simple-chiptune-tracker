@@ -3,10 +3,13 @@ package ui;
 import model.Event;
 import model.InstrumentChannel;
 import model.Track;
+import model.Tracker;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 // The music tracker application
@@ -14,25 +17,32 @@ public class TrackerApp {
     private static final String DIVIDER = "+--+--------+--------+--------+--------+";
     private static final int BARS_PER_PAGE = 2;
     private static final int ROWS_PER_PAGE = BARS_PER_PAGE * InstrumentChannel.ROWS_PER_BAR;
+    private static final String JSON_STORE = "./data/tracker.json";
 
-    private List<Track> trackList;
+    private Tracker tracker;
     private Track selectedTrack;
     private int selectedPage;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: initializes and runs the tracker app
     public TrackerApp() {
-        trackList = new ArrayList<>();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        loadTracker();
         input = new Scanner(System.in);
         runTracker();
     }
 
-    // EFFECTS: continually runs the main menu of the tracker app
+    // MODIFIES: this
+    // EFFECTS: continually runs the main menu of the tracker app and allows the user to select a command
     private void runTracker() {
         while (true) {
             displayMainMenu();
             String nextInput = input.next();
             if (nextInput.equals("q")) {
+                saveTracker();
                 System.out.println("\nGoodbye!");
                 break;
             } else {
@@ -41,25 +51,81 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: saves the tracker to file
+    // (modelled after JsonSerializationDemo repository)
+    private void saveTracker() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(tracker);
+            jsonWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads tracker from file
+    // (modelled after JsonSerializationDemo repository)
+    private void loadTracker() {
+        try {
+            tracker = jsonReader.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
+
     // EFFECTS: Print the main menu options
     private void displayMainMenu() {
         selectOne();
         System.out.println("\tNew track (n)");
         System.out.println("\tLoad track (l)");
+        System.out.println("\tDelete track (d)");
         System.out.println("\tQuit (q)");
     }
 
+    // MODIFIES: this
     // EFFECTS: processes the main menu command
     private void processMenuCommand(String nextInput) {
-        if (nextInput.equals("n")) {
-            createNewTrack();
-        } else if (nextInput.equals("l")) {
-            loadTrack();
-        } else {
-            invalidInput();
+        switch (nextInput) {
+            case "n":
+                createNewTrack();
+                break;
+            case "l":
+                loadTrack();
+                break;
+            case "d":
+                deleteTrack();
+                break;
+            default:
+                invalidInput();
+                break;
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to select and delete one of the previously created tracks saved to file
+    private void deleteTrack() {
+        if (tracker.numberOfTracks() == 0) {
+            System.out.println("\nThere are no saved tracks to delete.");
+        } else {
+            System.out.println("\nPlease select a track to delete:");
+            for (int i = 1; i <= tracker.numberOfTracks(); i++) {
+                System.out.println("\t[" + i + "] " + tracker.get(i).getName());
+            }
+            try {
+                int trackNum = input.nextInt();
+                if (trackNum < 1 || trackNum > tracker.numberOfTracks()) {
+                    invalidInput();
+                } else {
+                    tracker.remove(trackNum);
+                }
+            } catch (InputMismatchException e) {
+                invalidInput();
+            }
+        }
+    }
+
+    // MODIFIES: this
     // EFFECTS: creates, stores, and opens a new track
     private void createNewTrack() {
         System.out.println("\nTrack name:");
@@ -67,32 +133,35 @@ public class TrackerApp {
         String name = input.nextLine();
         Track newTrack = new Track(name);
         selectedTrack = newTrack;
-        trackList.add(newTrack);
+        tracker.add(newTrack);
         openTrack();
     }
 
-    // EFFECTS: allows the user to select and open one of the previously created tracks
+    // MODIFIES: this
+    // EFFECTS: allows the user to select and open one of the previously created tracks saved to file
     private void loadTrack() {
-        System.out.println("\nPlease select a track:");
-        for (Track track : trackList) {
-            System.out.println("\t" + track.getName());
-        }
-        input.nextLine();
-        String name = input.nextLine();
-        boolean trackFound = false;
-        for (Track track : trackList) {
-            if (name.equals(track.getName())) {
-                selectedTrack = track;
-                trackFound = true;
-                openTrack();
+        if (tracker.numberOfTracks() == 0) {
+            System.out.println("\nThere are no saved tracks.");
+        } else {
+            System.out.println("\nPlease select a track:");
+            for (int i = 1; i <= tracker.numberOfTracks(); i++) {
+                System.out.println("\t[" + i + "] " + tracker.get(i).getName());
             }
-        }
-        if (!trackFound) {
-            System.out.println("\nThat track does not exist.");
+            try {
+                int trackNum = input.nextInt();
+                if (trackNum < 1 || trackNum > tracker.numberOfTracks()) {
+                    invalidInput();
+                } else {
+                    selectedTrack = tracker.get(trackNum);
+                    openTrack();
+                }
+            } catch (InputMismatchException e) {
+                invalidInput();
+            }
         }
     }
 
-    // EFFECTS: Prints a selection message
+    // EFFECTS: prints a selection message
     private void selectOne() {
         System.out.println("\nPlease select one:");
     }
@@ -107,6 +176,7 @@ public class TrackerApp {
         System.out.println("\nThat input is invalid.");
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to select from the four channels in the selected track
     //          and returns the channel as a string, if no track is selected return "b"
     private String chooseChannel() {
@@ -157,6 +227,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: opens the currently selected track
     private void openTrack() {
         selectedPage = 1;
@@ -258,6 +329,7 @@ public class TrackerApp {
         System.out.println("\tSave and quit to menu (q)");
     }
 
+    // MODIFIES: this
     // EFFECTS: processes the track menu command
     private void processTrackCommand(String nextInput) {
         if ("a".equals(nextInput)) {
@@ -283,6 +355,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: displays the previous page
     private void previousPage() {
         if (selectedPage > 1) {
@@ -290,6 +363,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to add a number of bars to the track
     private void addOrRemoveBars() {
         displayAddOrRemoveBarsMenu();
@@ -307,6 +381,7 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
     // EFFECTS: processes the add or remove bars command
     private void processAddOrRemoveBarsCommand(String command) {
         if (command.equals("a")) {
@@ -318,6 +393,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to add a specific number of bars to the track
     private void addBars() {
         System.out.println("Number of bars:");
@@ -333,6 +409,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to remove a specific number of bars from the track
     private void removeBars() {
         System.out.println("Number of bars:");
@@ -349,6 +426,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: displays the next page
     private void nextPage() {
         if (selectedPage < numberOfPages()) {
@@ -356,6 +434,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to rename the currently selected track
     private void rename() {
         System.out.println("\nName:");
@@ -364,6 +443,7 @@ public class TrackerApp {
         selectedTrack.setName(name);
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to change the tempo of the currently selected track
     private void changeTempo() {
         System.out.println("\nTempo (BPM):");
@@ -379,6 +459,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to transpose a selection of the track
     private void transpose() {
         displayTransposeMenu();
@@ -396,6 +477,7 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
     // EFFECTS: processes the transpose command
     private void processTransposeCommand(String command) {
         if (command.equals("c")) {
@@ -407,6 +489,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to transpose a selection of the track
     private void transposeTrack() {
         displayTransposeTypeMenu();
@@ -418,6 +501,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: processes the transpose track command
     private void processTransposeTrackCommand(String command) {
         switch (command) {
@@ -436,19 +520,22 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: transposes the entire track up by an octave
     private void transposeTrackUpByOctave() {
         selectedTrack.transposeUpByOctave();
     }
 
+    // MODIFIES: this
     // EFFECTS: transposes the entire track down by an octave
     private void transposeTrackDownByOctave() {
         selectedTrack.transposeDownByOctave();
     }
 
+    // MODIFIES: this
     // EFFECTS: transposes the entire track by a given number of semitones
     private void transposeTrackSemitones() {
-        System.out.println("\nSemitones: ");
+        System.out.println("\nSemitones (+ to transpose up, - to transpose down): ");
         try {
             int semitones = input.nextInt();
             selectedTrack.transpose(semitones);
@@ -457,6 +544,7 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: allows the user to transpose a specific channel
     private void transposeChannel() {
         displayTransposeTypeMenu();
@@ -468,6 +556,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: displays the transpose type menu
     private void displayTransposeTypeMenu() {
         selectOne();
         System.out.println("\tTranspose up by an octave (u)");
@@ -476,6 +565,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the transpose channel command
     private void processTransposeChannelCommand(String command) {
         switch (command) {
             case "u":
@@ -493,6 +584,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: transposes the selected channel up by an octave in the selected track
     private void transposeChannelUpByOctave() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -502,6 +595,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: transposes the selected channel down by an octave in the selected track
     private void transposeChannelDownByOctave() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -511,6 +606,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: transposes the selected channel by a specified number of semitones in the selected track
     private void transposeChannelSemitones() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -527,6 +624,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear a specified section of the selected track
     private void clear() {
         displayClearMenu();
         String nextInput = input.next();
@@ -535,6 +634,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: displays the clear menu
     private void displayClearMenu() {
         selectOne();
         System.out.println("\tClear a single note or rest (s)");
@@ -543,6 +643,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the clear command
     private void processClearCommand(String command) {
         switch (command) {
             case "s":
@@ -560,6 +662,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear a specific event in the selected track
     private void clearSingle() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -572,6 +676,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear a channel in the selected track
     private void clearChannel() {
         displayClearChannelMenu();
         String command = input.next();
@@ -582,6 +688,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear the entire selected track
     private void clearTrack() {
         displayClearTrackMenu();
         String command = input.next();
@@ -592,6 +700,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: displays the clear track menu
     private void displayClearTrackMenu() {
         selectOne();
         System.out.println("\tClear a section of the track (s)");
@@ -599,6 +708,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the clear track command
     private void processClearTrackCommand(String command) {
         if (command.equals("s")) {
             clearTrackSection();
@@ -609,6 +720,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear a section of the track
     private void clearTrackSection() {
         System.out.println("\nFrom row:");
         try {
@@ -627,10 +740,13 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: clears the entire selected track
     private void clearEntireTrack() {
         selectedTrack.clear();
     }
 
+    // EFFECTS: displays the clear channel menu
     private void displayClearChannelMenu() {
         selectOne();
         System.out.println("\tClear a section of the channel (s)");
@@ -638,6 +754,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the clear channel command
     private void processClearChannelCommand(String command) {
         if (command.equals("s")) {
             clearChannelSection();
@@ -648,6 +766,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear a section of a specified channel in the selected track
     private void clearChannelSection() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -671,6 +791,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to clear an entire channel in the selected track
     private void clearEntireChannel() {
         String channel = chooseChannel();
         if (channel.equals("b")) {
@@ -680,6 +802,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to add an effect to a note in the selected track
     private void addEffect() {
         displayEffectMenu();
         String effect = input.next();
@@ -688,6 +812,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: displays the effect menu
     private void displayEffectMenu() {
         selectOne();
         System.out.println("\tStaccato (s)");
@@ -695,6 +820,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the add effect command
     private void processAddEffectCommand(String effect) {
         if (effect.equals("s")) {
             makeStaccato();
@@ -705,6 +832,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to make a specified note in the selected track staccato
     private void makeStaccato() {
         String channel = chooseChannel();
         int row = chooseRow();
@@ -714,6 +843,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to remove an effect from a specified note in the selected track
     private void makeNotStaccato() {
         String channel = chooseChannel();
         int row = chooseRow();
@@ -723,6 +854,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to add a note or a rest to the selected track
     private void addNoteOrRest() {
         displayAddNoteOrRestMenu();
         String nextInput = input.next();
@@ -731,6 +864,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: displays the add note or rest menu
     private void displayAddNoteOrRestMenu() {
         selectOne();
         System.out.println("\tAdd a note (n)");
@@ -738,6 +872,8 @@ public class TrackerApp {
         goBack();
     }
 
+    // MODIFIES: this
+    // EFFECTS: processes the add note or rest command
     private void processAddNoteOrRestCommand(String nextInput) {
         if (nextInput.equals("n")) {
             addNote();
@@ -748,6 +884,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to add a note to a specified position in the selected track
     private void addNote() {
         String channel = chooseChannel();
         if (!channel.equals("b")) {
@@ -764,6 +902,8 @@ public class TrackerApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: allows the user to add a rest to a specified position in the selected track
     private void addRest() {
         String channel = chooseChannel();
         if (!channel.equals("b")) {
@@ -774,12 +914,14 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: allows the user to choose a note from all possible notes
     private int chooseNote() {
         System.out.println("\nNote (ie. C, F#, A):");
         String note = input.next();
         return interpretNote(note);
     }
 
+    // EFFECTS: allows the user to choose an octave from all possible octaves
     private int chooseOctave() {
         System.out.println("\nOctave (1, 2, or 3):");
         try {
@@ -796,6 +938,7 @@ public class TrackerApp {
         }
     }
 
+    // EFFECTS: returns the integer that represents the given note
     private static int interpretNote(String note) {
         switch (note) {
             case "C":
@@ -815,6 +958,8 @@ public class TrackerApp {
         }
     }
 
+    // REQUIRES: note is not C, C#, D, D#, E, or F
+    // EFFECTS: returns the integer that represents the given note
     private static int interpretNoteFSharpToB(String note) {
         switch (note) {
             case "F#":
