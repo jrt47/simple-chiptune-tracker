@@ -547,12 +547,67 @@ class TrackTest {
     }
 
     @Test
-    void testIsIdenticalToOneNoteDifferent() {
+    void testIsIdenticalToOneNoteDifferentPulse1() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        track1.addNote("pulse1", 3, 1);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToOneNoteDifferentPulse2() {
         Track track1 = new Track("track");
         Track track2 = new Track("track");
         setupTrack1(track1);
         setupTrack1(track2);
         track2.addNote("pulse2", 4, 2);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToOneNoteDifferentTriangle() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        track1.addNote("triangle", 8, 10);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToOneNoteDifferentNoise() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        track2.addNote("noise", 6, 3);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToOneNoteDifferentNames() {
+        Track track1 = new Track("track1");
+        Track track2 = new Track("track2");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToOneNoteDifferentTempos() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        track1.setTempo(100);
+        track2.setTempo(120);
         assertFalse(track1.isIdenticalTo(track2));
         assertFalse(track2.isIdenticalTo(track1));
     }
