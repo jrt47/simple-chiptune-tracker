@@ -547,6 +547,17 @@ class TrackTest {
     }
 
     @Test
+    void testIsIdenticalToOneNoteDifferent() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        track2.addNote("pulse2", 4, 2);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
     void testIsIdenticalToIdentical() {
         Track track1 = new Track("track");
         Track track2 = new Track("track");
