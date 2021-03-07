@@ -32,8 +32,9 @@ public class InstrumentChannel {
     // MODIFIES: this
     // EFFECTS: removes numBars bars from the channel
     public void removeBars(int numBars) {
-        for (int i = 1; i <= ROWS_PER_BAR * numBars; i++) {
-            eventList.remove(eventList.size() - ROWS_PER_BAR * numBars);
+        int numRowsToClear = numBars * ROWS_PER_BAR;
+        for (int i = 1; i <= numRowsToClear; i++) {
+            eventList.remove(numberOfRows() - 1);
         }
     }
 

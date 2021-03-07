@@ -27,5 +27,9 @@ barrier. I am excited to start using the application when it is finished.
 - As a user, I want to be able to add a note or a rest to an instrument channel in my track
 - As a user, I want to be able to add an effect to a note in my track
 - As a user, I want to be able to clear a selection of notes from my track
+- As a user, I want to be able to add or remove a number of bars from my track
 - As a user, I want to be able to transpose my track or a channel in my track by a given number of semitones
 - As a user, I want to be able to choose the tempo of my track
+- As a user, I want to be able to save each of my tracks to file
+- As a user, I want to be able to load each of my tracks from file
+- As a user, I want to be able to delete each of my tracks from file

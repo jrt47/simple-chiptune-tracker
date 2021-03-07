@@ -5,6 +5,7 @@ import model.InstrumentChannel;
 import model.Track;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -62,7 +63,8 @@ public class TrackerApp {
     // EFFECTS: creates, stores, and opens a new track
     private void createNewTrack() {
         System.out.println("\nTrack name:");
-        String name = input.next();
+        input.nextLine();
+        String name = input.nextLine();
         Track newTrack = new Track(name);
         selectedTrack = newTrack;
         trackList.add(newTrack);
@@ -75,7 +77,8 @@ public class TrackerApp {
         for (Track track : trackList) {
             System.out.println("\t" + track.getName());
         }
-        String name = input.next();
+        input.nextLine();
+        String name = input.nextLine();
         boolean trackFound = false;
         for (Track track : trackList) {
             if (name.equals(track.getName())) {
@@ -140,12 +143,17 @@ public class TrackerApp {
     //          return -1 if no valid row is selected
     private int chooseRow() {
         System.out.println("\nRow:");
-        int row = input.nextInt();
-        if (row < 1 || row > ROWS_PER_PAGE) {
+        try {
+            int row = input.nextInt();
+            if (row < 1 || row > ROWS_PER_PAGE) {
+                invalidInput();
+                return -1;
+            } else {
+                return row;
+            }
+        } catch (InputMismatchException e) {
             invalidInput();
             return -1;
-        } else {
-            return row;
         }
     }
 
@@ -295,7 +303,7 @@ public class TrackerApp {
     private void displayAddOrRemoveBarsMenu() {
         selectOne();
         System.out.println("\tAdd bars (a)");
-//        System.out.println("\tRemove bars (r)");
+        System.out.println("\tRemove bars (r)");
         goBack();
     }
 
@@ -313,23 +321,32 @@ public class TrackerApp {
     // EFFECTS: allows the user to add a specific number of bars to the track
     private void addBars() {
         System.out.println("Number of bars:");
-        int numBars = input.nextInt();
-        if (numBars < 1) {
+        try {
+            int numBars = input.nextInt();
+            if (numBars < 1) {
+                invalidInput();
+            } else {
+                selectedTrack.addBars(numBars);
+            }
+        } catch (InputMismatchException e) {
             invalidInput();
-        } else {
-            selectedTrack.addBars(numBars);
         }
     }
 
     // EFFECTS: allows the user to remove a specific number of bars from the track
     private void removeBars() {
-//        System.out.println("Number of bars:");
-//        int numBars = input.nextInt();
-//        if (numBars < 1 || numBars >= selectedTrack.numberOfBars()) {
-//            invalidInput();
-//        } else {
-//            selectedTrack.removeBars(numBars);
-//        }
+        System.out.println("Number of bars:");
+        try {
+            int numBars = input.nextInt();
+            if (numBars < 1 || numBars >= selectedTrack.numberOfBars()) {
+                invalidInput();
+            } else {
+                selectedTrack.removeBars(numBars);
+                selectedPage = Math.min(selectedPage, numberOfPages());
+            }
+        } catch (InputMismatchException e) {
+            invalidInput();
+        }
     }
 
     // EFFECTS: displays the next page
@@ -342,15 +359,24 @@ public class TrackerApp {
     // EFFECTS: allows the user to rename the currently selected track
     private void rename() {
         System.out.println("\nName:");
-        String name = input.next();
+        input.nextLine();
+        String name = input.nextLine();
         selectedTrack.setName(name);
     }
 
     // EFFECTS: allows the user to change the tempo of the currently selected track
     private void changeTempo() {
         System.out.println("\nTempo (BPM):");
-        int tempo = input.nextInt();
-        selectedTrack.setTempo(tempo);
+        try {
+            int tempo = input.nextInt();
+            if (tempo <= 0) {
+                invalidInput();
+            } else {
+                selectedTrack.setTempo(tempo);
+            }
+        } catch (InputMismatchException e) {
+            invalidInput();
+        }
     }
 
     // EFFECTS: allows the user to transpose a selection of the track
@@ -394,14 +420,19 @@ public class TrackerApp {
 
     // EFFECTS: processes the transpose track command
     private void processTransposeTrackCommand(String command) {
-        if (command.equals("u")) {
-            transposeTrackUpByOctave();
-        } else if (command.equals("d")) {
-            transposeTrackDownByOctave();
-        } else if (command.equals("s")) {
-            transposeTrackSemitones();
-        } else {
-            invalidInput();
+        switch (command) {
+            case "u":
+                transposeTrackUpByOctave();
+                break;
+            case "d":
+                transposeTrackDownByOctave();
+                break;
+            case "s":
+                transposeTrackSemitones();
+                break;
+            default:
+                invalidInput();
+                break;
         }
     }
 
@@ -418,8 +449,12 @@ public class TrackerApp {
     // EFFECTS: transposes the entire track by a given number of semitones
     private void transposeTrackSemitones() {
         System.out.println("\nSemitones: ");
-        int semitones = input.nextInt();
-        selectedTrack.transpose(semitones);
+        try {
+            int semitones = input.nextInt();
+            selectedTrack.transpose(semitones);
+        } catch (InputMismatchException e) {
+            invalidInput();
+        }
     }
 
     // EFFECTS: allows the user to transpose a specific channel
@@ -442,14 +477,19 @@ public class TrackerApp {
     }
 
     private void processTransposeChannelCommand(String command) {
-        if (command.equals("u")) {
-            transposeChannelUpByOctave();
-        } else if (command.equals("d")) {
-            transposeChannelDownByOctave();
-        } else if (command.equals("s")) {
-            transposeChannelSemitones();
-        } else {
-            invalidInput();
+        switch (command) {
+            case "u":
+                transposeChannelUpByOctave();
+                break;
+            case "d":
+                transposeChannelDownByOctave();
+                break;
+            case "s":
+                transposeChannelSemitones();
+                break;
+            default:
+                invalidInput();
+                break;
         }
     }
 
@@ -477,15 +517,20 @@ public class TrackerApp {
             transposeChannel();
         } else {
             System.out.println("\nSemitones: ");
-            int semitones = input.nextInt();
-            selectedTrack.transpose(channel, semitones);
+            try {
+                int semitones = input.nextInt();
+                selectedTrack.transpose(channel, semitones);
+            } catch (InputMismatchException e) {
+                invalidInput();
+                transposeChannel();
+            }
         }
     }
 
     private void clear() {
         displayClearMenu();
         String nextInput = input.next();
-        if (!input.equals("b")) {
+        if (!nextInput.equals("b")) {
             processClearCommand(nextInput);
         }
     }
@@ -499,14 +544,19 @@ public class TrackerApp {
     }
 
     private void processClearCommand(String command) {
-        if (command.equals("s")) {
-            clearSingle();
-        } else if (command.equals("c")) {
-            clearChannel();
-        } else if (command.equals("t")) {
-            clearTrack();
-        } else {
-            invalidInput();
+        switch (command) {
+            case "s":
+                clearSingle();
+                break;
+            case "c":
+                clearChannel();
+                break;
+            case "t":
+                clearTrack();
+                break;
+            default:
+                invalidInput();
+                break;
         }
     }
 
@@ -561,16 +611,20 @@ public class TrackerApp {
 
     private void clearTrackSection() {
         System.out.println("\nFrom row:");
-        int startRow = input.nextInt();
-        if (startRow < 1 || startRow > ROWS_PER_PAGE) {
+        try {
+            int startRow = input.nextInt();
+            if (startRow < 1 || startRow > ROWS_PER_PAGE) {
+                invalidInput();
+            }
+            System.out.println("\nTo:");
+            int endRow = input.nextInt();
+            if (endRow < 1 || endRow > ROWS_PER_PAGE || endRow <= startRow) {
+                invalidInput();
+            }
+            selectedTrack.clear(startRow, endRow);
+        } catch (InputMismatchException e) {
             invalidInput();
         }
-        System.out.println("\nTo:");
-        int endRow = input.nextInt();
-        if (endRow < 1 || endRow > ROWS_PER_PAGE || endRow <= startRow) {
-            invalidInput();
-        }
-        selectedTrack.clear(startRow, endRow);
     }
 
     private void clearEntireTrack() {
@@ -599,17 +653,21 @@ public class TrackerApp {
         if (channel.equals("b")) {
             clearChannel();
         } else {
-            System.out.println("\nFrom row:");
-            int startRow = input.nextInt();
-            if (startRow < 1 || startRow > ROWS_PER_PAGE) {
+            try {
+                System.out.println("\nFrom row:");
+                int startRow = input.nextInt();
+                if (startRow < 1 || startRow > ROWS_PER_PAGE) {
+                    invalidInput();
+                }
+                System.out.println("\nTo:");
+                int endRow = input.nextInt();
+                if (endRow < 1 || endRow > ROWS_PER_PAGE || endRow <= startRow) {
+                    invalidInput();
+                }
+                selectedTrack.clear(channel, startRow, endRow);
+            } catch (InputMismatchException e) {
                 invalidInput();
             }
-            System.out.println("\nTo:");
-            int endRow = input.nextInt();
-            if (endRow < 1 || endRow > ROWS_PER_PAGE || endRow <= startRow) {
-                invalidInput();
-            }
-            selectedTrack.clear(channel, startRow, endRow);
         }
     }
 
@@ -723,13 +781,18 @@ public class TrackerApp {
     }
 
     private int chooseOctave() {
-        System.out.println("\nOctave (ie. 1, 2, 3):");
-        int octave = input.nextInt();
-        if (octave < 1 || octave > Event.NUM_OCTAVES) {
+        System.out.println("\nOctave (1, 2, or 3):");
+        try {
+            int octave = input.nextInt();
+            if (octave < 1 || octave > Event.NUM_OCTAVES) {
+                invalidInput();
+                return -1;
+            } else {
+                return octave;
+            }
+        } catch (InputMismatchException e) {
             invalidInput();
             return -1;
-        } else {
-            return octave;
         }
     }
 
