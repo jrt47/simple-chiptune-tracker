@@ -8,7 +8,7 @@ additional complexities of professional music tracker software. The application 
 make old-style chiptune music but has little experience using music trackers.
 
 Users will be able to program up to four instrument channels, including:
-- Two pulse waves of variable duty cycle
+- Two pulse waves of variable pulse width
 - A triangle wave
 - A noise generator
 
