@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a music track
 // Tracks have a name, tempo,
 // and have four instrument channels: pulse 1, pulse 2, triangle, and noise
-public class Track {
+public class Track implements Writable {
     public static final int DEFAULT_BPM = 120;
 
     private String name;
@@ -193,6 +197,33 @@ public class Track {
         pulse2.transposeDownByOctave();
         triangle.transposeDownByOctave();
         noise.transposeDownByOctave();
+    }
+
+    // EFFECTS: produce true if this and track have the same contents, false otherwise
+    public boolean isIdenticalTo(Track track) {
+        boolean namesIdentical = this.name.equals(track.name);
+        boolean temposIdentical = this.tempo == track.tempo;
+        boolean pulse1Identical = this.pulse1.isIdenticalTo(track.pulse1);
+        boolean pulse2Identical = this.pulse2.isIdenticalTo(track.pulse2);
+        boolean triangleIdentical = this.triangle.isIdenticalTo(track.triangle);
+        boolean noiseIdentical = this.noise.isIdenticalTo(track.noise);
+        boolean channelsIdentical = pulse1Identical && pulse2Identical && triangleIdentical && noiseIdentical;
+        return namesIdentical && temposIdentical && channelsIdentical;
+    }
+
+    // EFFECTS: returns this as JSON object
+    // (modelled after JsonSerializationDemo repository)
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("tempo", tempo);
+        json.put("numberOfBars", numberOfBars());
+        json.put("pulse1", pulse1.toJson());
+        json.put("pulse2", pulse2.toJson());
+        json.put("triangle", triangle.toJson());
+        json.put("noise", noise.toJson());
+        return json;
     }
 
     // REQUIRES: channel is "pulse1", "pulse2", "triangle", or "noise"

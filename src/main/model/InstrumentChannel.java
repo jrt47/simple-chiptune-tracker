@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents an instrument channel inside of a track
 // Instrument channels have a set amount of bars and can have notes or rests placed in them
-public class InstrumentChannel {
+public class InstrumentChannel implements Writable {
     public static final int INITIAL_NUM_OF_BARS = 2;
     public static final int ROWS_PER_BAR = 16;
 
@@ -128,5 +132,39 @@ public class InstrumentChannel {
         for (Event event : eventList) {
             event.transposeDownByOctave();
         }
+    }
+
+    // EFFECTS: produce true if this and channel have the same contents, false otherwise
+    public boolean isIdenticalTo(InstrumentChannel channel) {
+        if (!(this.numberOfBars() == channel.numberOfBars())) {
+            return false;
+        }
+        for (int i = 0; i < eventList.size(); i++) {
+            Event event1 = this.eventList.get(i);
+            Event event2 = channel.eventList.get(i);
+            if (!event1.isIdenticalTo(event2)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // EFFECTS: returns this as JSON object
+    // (modelled after JsonSerializationDemo repository)
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("eventList", eventListToJson());
+        return json;
+    }
+
+    // EFFECTS: returns events in this channel as a JSON array
+    // (modelled after JsonSerializationDemo repository)
+    private JSONArray eventListToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Event event : eventList) {
+            jsonArray.put(event.toJson());
+        }
+        return jsonArray;
     }
 }

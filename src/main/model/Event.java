@@ -1,9 +1,12 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents an event that can be placed inside a track
 // Can be a note, a rest, or a blank event
 // Notes have a pitch and can be staccato or not staccato
-public class Event {
+public class Event implements Writable {
     public static final int NUM_OCTAVES = 3;
     public static final int MAX_PITCH = NUM_OCTAVES * 12;
 
@@ -122,6 +125,17 @@ public class Event {
         } else {
             return "____ _";
         }
+    }
+
+    // EFFECTS: returns this as JSON object
+    // (modelled after JsonSerializationDemo repository)
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("type", type);
+        json.put("pitch", pitch);
+        json.put("isStaccato", isStaccato);
+        return json;
     }
 
     // REQUIRES: the event is of type "note"

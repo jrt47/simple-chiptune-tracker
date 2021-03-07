@@ -514,4 +514,45 @@ class TrackTest {
         assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
+
+    void setupTrack1(Track track) {
+        track.setTempo(100);
+        track.addNote("pulse1", 3, Event.MAX_PITCH - 3);
+        track.makeStaccato("pulse1", 3);
+        track.addNote("pulse1", 10, Event.MAX_PITCH);
+        track.addNote("pulse2", 4, 3);
+        track.addRest("triangle", 8);
+        track.addNote("noise", 6, 1);
+    }
+
+    void setupTrack2(Track track) {
+        track.addBars(1);
+        track.addRest("pulse1", 7);
+        track.addNote("pulse2", 2, 5);
+        track.makeStaccato("pulse2", 3);
+        track.addNote("triangle", 1, Event.MAX_PITCH - 12);
+        track.addNote("noise", 5, 11);
+        track.makeStaccato("noise", 5);
+        track.addRest("noise", 9);
+    }
+
+    @Test
+    void testIsIdenticalToNotIdentical() {
+        Track track1 = new Track("track1");
+        Track track2 = new Track("track2");
+        setupTrack1(track1);
+        setupTrack2(track2);
+        assertFalse(track1.isIdenticalTo(track2));
+        assertFalse(track2.isIdenticalTo(track1));
+    }
+
+    @Test
+    void testIsIdenticalToIdentical() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        setupTrack1(track1);
+        setupTrack1(track2);
+        assertTrue(track1.isIdenticalTo(track2));
+        assertTrue(track2.isIdenticalTo(track1));
+    }
 }

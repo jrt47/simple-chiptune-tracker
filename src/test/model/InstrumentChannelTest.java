@@ -424,4 +424,43 @@ public class InstrumentChannelTest {
         assertTrue(e15.isIdenticalTo(channel.getEvent(15)));
         assertTrue(e16.isIdenticalTo(channel.getEvent(16)));
     }
+
+    void setupChannel1(InstrumentChannel channel) {
+        channel.addNote(3, Event.MAX_PITCH - 3);
+        channel.makeStaccato(3);
+        channel.addNote(10, Event.MAX_PITCH);
+        channel.addNote(4, 3);
+        channel.addRest(8);
+        channel.addNote(6, 1);
+    }
+
+    void setupChannel2(InstrumentChannel channel) {
+        channel.addRest(7);
+        channel.addNote(2, 5);
+        channel.makeStaccato(3);
+        channel.addNote(1, Event.MAX_PITCH - 12);
+        channel.addNote(5, 11);
+        channel.makeStaccato(5);
+        channel.addRest(9);
+    }
+
+    @Test
+    void testIsIdenticalToNotIdentical() {
+        InstrumentChannel channel1 = new InstrumentChannel();
+        InstrumentChannel channel2 = new InstrumentChannel();
+        setupChannel1(channel1);
+        setupChannel2(channel2);
+        assertFalse(channel1.isIdenticalTo(channel2));
+        assertFalse(channel2.isIdenticalTo(channel1));
+    }
+
+    @Test
+    void testIsIdenticalToIdentical() {
+        InstrumentChannel channel1 = new InstrumentChannel();
+        InstrumentChannel channel2 = new InstrumentChannel();
+        setupChannel1(channel1);
+        setupChannel1(channel2);
+        assertTrue(channel1.isIdenticalTo(channel2));
+        assertTrue(channel2.isIdenticalTo(channel1));
+    }
 }
