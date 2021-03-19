@@ -13,7 +13,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // The music tracker application
-public class TrackerApp {
+public class TrackerConsole {
     private static final String DIVIDER = "+--+--------+--------+--------+--------+";
     private static final int BARS_PER_PAGE = 2;
     private static final int ROWS_PER_PAGE = BARS_PER_PAGE * InstrumentChannel.ROWS_PER_BAR;
@@ -27,7 +27,7 @@ public class TrackerApp {
     private JsonReader jsonReader;
 
     // EFFECTS: initializes and runs the tracker app
-    public TrackerApp() {
+    public TrackerConsole() {
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         loadTracker();
@@ -978,5 +978,9 @@ public class TrackerApp {
                 invalidInput();
                 return -1;
         }
+    }
+
+    public static void main(String[] args) {
+        new TrackerConsole();
     }
 }
