@@ -16,6 +16,37 @@ public class Tracker implements Writable {
         trackList = new ArrayList<>();
     }
 
+    // EFFECTS: returns the list of tracks in the tracker
+    public List<Track> getTrackList() {
+        return trackList;
+    }
+
+    // EFFECTS: returns the track in the tracker with the given name, if no such track exists return null
+    public Track getTrack(String name) {
+        for (Track track : trackList) {
+            if (name.equals(track.getName())) {
+                return track;
+            }
+        }
+        return null;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds an empty track with given name to the tracker
+    public void addTrack(String name) {
+        Track track = new Track(name);
+        trackList.add(track);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes the track with given name from the tracker, if such track does not exist do nothing
+    public void removeTrack(String name) {
+        Track track = getTrack(name);
+        trackList.remove(track);
+    }
+
+    // TODO: Remove all methods after this point (besides persistence methods)
+
     // EFFECTS: returns the number of tracks in the tracker
     public int numberOfTracks() {
         return trackList.size();
@@ -46,16 +77,6 @@ public class Tracker implements Writable {
         } else {
             return trackList.get(pos - 1);
         }
-    }
-
-    // EFFECTS: returns the track in the tracker with the given name, if no such track exists return null
-    public Track get(String name) {
-        for (Track track : trackList) {
-            if (name.equals(track.getName())) {
-                return track;
-            }
-        }
-        return null;
     }
 
     // EFFECTS: returns this as JSON object

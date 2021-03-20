@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.Objects;
+
 // Represents a music track
 // Tracks have a name, tempo,
 // and have four instrument channels: pulse 1, pulse 2, triangle, and noise
@@ -199,16 +201,26 @@ public class Track implements Writable {
         noise.transposeDownByOctave();
     }
 
-    // EFFECTS: produce true if this and track have the same contents, false otherwise
-    public boolean isIdenticalTo(Track track) {
-        boolean namesIdentical = this.name.equals(track.name);
-        boolean temposIdentical = this.tempo == track.tempo;
-        boolean pulse1Identical = this.pulse1.isIdenticalTo(track.pulse1);
-        boolean pulse2Identical = this.pulse2.isIdenticalTo(track.pulse2);
-        boolean triangleIdentical = this.triangle.isIdenticalTo(track.triangle);
-        boolean noiseIdentical = this.noise.isIdenticalTo(track.noise);
-        boolean channelsIdentical = pulse1Identical && pulse2Identical && triangleIdentical && noiseIdentical;
-        return namesIdentical && temposIdentical && channelsIdentical;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Track track = (Track) o;
+        return tempo == track.tempo
+                && name.equals(track.name)
+                && pulse1.equals(track.pulse1)
+                && pulse2.equals(track.pulse2)
+                && triangle.equals(track.triangle)
+                && noise.equals(track.noise);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, tempo, pulse1, pulse2, triangle, noise);
     }
 
     // EFFECTS: returns this as JSON object

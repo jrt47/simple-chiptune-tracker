@@ -1,5 +1,6 @@
 package ui.menu;
 
+import model.Track;
 import model.Tracker;
 import persistence.JsonWriter;
 import persistence.JsonReader;
@@ -12,32 +13,42 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MainMenu extends JFrame {
-    private static final Dimension WINDOW_SIZE = new Dimension(300, 300);
-    private static final Dimension BUTTON_SIZE = new Dimension(200, 40);
-    private static final int SPACING = 10;
-    private static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
+    private static final Dimension WINDOW_SIZE = new Dimension(290, 250);
+    public static final int SPACING = 10;
+    private static final int MAIN_BUTTON_WIDTH = 200;
+    private static final int SUB_BUTTON_WIDTH = (200 - SPACING) / 2;
+    private static final Dimension MAIN_BUTTON_SIZE = new Dimension(MAIN_BUTTON_WIDTH, 40);
+    private static final Dimension SUB_BUTTON_SIZE = new Dimension(SUB_BUTTON_WIDTH, 30);
+    private static final Dimension TEXT_BOX_SIZE = new Dimension(MAIN_BUTTON_WIDTH, 30);
+    public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
     private static final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 20);
 
     private static final String JSON_STORE = "./data/tracker.json";
 
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+
     private Tracker tracker;
 
-    private CardLayout layout;
+    private JPanel cardPanel;
+
     private JPanel mainMenu;
+    private NewMenu newMenu;
+    private LoadMenu loadMenu;
 
     private JButton newButton;
     private JButton loadButton;
-    private JButton deleteButton;
     private JButton quitButton;
-
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
 
     public MainMenu() {
         super("Simple Chiptune Tracker");
         initializeFields();
         initializeGraphics();
         initializeInteraction();
+    }
+
+    public Tracker getTracker() {
+        return tracker;
     }
 
     private void initializeFields() {
@@ -70,6 +81,8 @@ public class MainMenu extends JFrame {
     }
 
     private void initializeGraphics() {
+        setLayout(new FlowLayout());
+        addTitle();
         initializeCards();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(WINDOW_SIZE);
@@ -78,61 +91,97 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
-    private void initializeCards() {
-        layout = new CardLayout();
-        setLayout(layout);
+    private void addTitle() {
+        JLabel title = new JLabel("Simple Chiptune Tracker");
+        title.setFont(TITLE_FONT);
+        add(title);
+    }
 
-        mainMenu =  new JPanel();
+    private void initializeCards() {
+        CardLayout layout = new CardLayout();
+        cardPanel = new JPanel(layout);
+        cardPanel.setPreferredSize(WINDOW_SIZE);
+
+        mainMenu = new JPanel();
         initializeMainMenu();
 
-        JPanel newMenu = new NewMenu();
-        JPanel loadMenu = new LoadMenu();
-        JPanel deleteMenu = new DeleteMenu();
+        newMenu = new NewMenu(this);
+        loadMenu = new LoadMenu(this);
 
-        add(mainMenu);
-        add(newMenu);
-        add(loadMenu);
-        add(deleteMenu);
+        cardPanel.add(mainMenu);
+        cardPanel.add(newMenu);
+        cardPanel.add(loadMenu);
 
         layout.addLayoutComponent(mainMenu, "main");
         layout.addLayoutComponent(newMenu, "new");
         layout.addLayoutComponent(loadMenu, "load");
-        layout.addLayoutComponent(deleteMenu, "delete");
+
+        add(cardPanel);
     }
 
     private void initializeMainMenu() {
         mainMenu.setLayout(new FlowLayout(FlowLayout.CENTER, SPACING, SPACING));
 
-        JLabel title = new JLabel("Simple Chiptune Tracker");
         newButton = new JButton("New Track");
         loadButton = new JButton("Load Track");
-        deleteButton = new JButton("Delete Track");
         quitButton = new JButton("Quit");
 
-        title.setFont(TITLE_FONT);
-        formatButton(newButton);
-        formatButton(loadButton);
-        formatButton(deleteButton);
-        formatButton(quitButton);
+        formatMainButton(newButton);
+        formatMainButton(loadButton);
+        formatMainButton(quitButton);
 
-        mainMenu.add(title);
         mainMenu.add(newButton);
         mainMenu.add(loadButton);
-        mainMenu.add(deleteButton);
         mainMenu.add(quitButton);
     }
 
-    private static void formatButton(JButton button) {
-        button.setPreferredSize(BUTTON_SIZE);
+    private static void formatMainButton(JButton button) {
+        button.setPreferredSize(MAIN_BUTTON_SIZE);
         button.setFont(FONT);
+    }
+
+    public static void formatSubButton(JButton button) {
+        button.setPreferredSize(SUB_BUTTON_SIZE);
+        button.setFont(FONT);
+    }
+
+    public static void formatTextBox(JComponent textBox) {
+        textBox.setPreferredSize(TEXT_BOX_SIZE);
+        textBox.setFont(FONT);
     }
 
     private void initializeInteraction() {
         MainMenuListener listener = new MainMenuListener();
         newButton.addActionListener(listener);
         loadButton.addActionListener(listener);
-        deleteButton.addActionListener(listener);
         quitButton.addActionListener(listener);
+    }
+
+    private void openNewMenu() {
+        newMenu.resetTextField();
+        CardLayout layout = (CardLayout) cardPanel.getLayout();
+        layout.show(cardPanel, "new");
+    }
+
+    private void openLoadMenu() {
+        loadMenu.updateTracks();
+        CardLayout layout = (CardLayout) cardPanel.getLayout();
+        layout.show(cardPanel, "load");
+    }
+
+    private void quit() {
+        saveTracker();
+        System.exit(0);
+    }
+
+    public void goBack() {
+        CardLayout layout = (CardLayout) cardPanel.getLayout();
+        layout.show(cardPanel, "main");
+    }
+
+    public void openTrack(String name) {
+        Track track = tracker.getTrack(name);
+        // TODO
     }
 
     private class MainMenuListener implements ActionListener {
@@ -141,14 +190,11 @@ public class MainMenu extends JFrame {
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();
             if (newButton.equals(source)) {
-                layout.show(getContentPane(), "new");
+                openNewMenu();
             } else if (loadButton.equals(source)) {
-                layout.show(getContentPane(), "load");
-            } else if (deleteButton.equals(source)) {
-                layout.show(getContentPane(), "delete");
+                openLoadMenu();
             } else if (quitButton.equals(source)) {
-                saveTracker();
-                System.exit(0);
+                quit();
             }
         }
     }

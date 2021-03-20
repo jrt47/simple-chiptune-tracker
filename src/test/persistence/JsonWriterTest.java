@@ -83,8 +83,8 @@ public class JsonWriterTest {
             Track testTrack1 = new Track("track1");
             Track testTrack2 = new Track("track2");
             setupGeneralTracks(testTrack1, testTrack2);
-            assertTrue(testTrack1.isIdenticalTo(tracker.get(1)));
-            assertTrue(testTrack2.isIdenticalTo(tracker.get(2)));
+            assertEquals(testTrack1, tracker.get(1));
+            assertEquals(testTrack2, tracker.get(2));
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
