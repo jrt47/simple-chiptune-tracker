@@ -4,6 +4,7 @@ import model.Track;
 import model.Tracker;
 import persistence.JsonWriter;
 import persistence.JsonReader;
+import ui.tracker.TrackerApp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +85,7 @@ public class MainMenu extends JFrame {
         setLayout(new FlowLayout());
         addTitle();
         initializeCards();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setMinimumSize(WINDOW_SIZE);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -181,7 +182,10 @@ public class MainMenu extends JFrame {
 
     public void openTrack(String name) {
         Track track = tracker.getTrack(name);
-        // TODO
+        if (!(track == null)) {
+            setVisible(false);
+            new TrackerApp(track, this);
+        }
     }
 
     private class MainMenuListener implements ActionListener {

@@ -121,9 +121,9 @@ public class Event implements Writable {
         if (type.equals("note")) {
             return getLetters() + "-" + getOctave() + " " + getEffect();
         } else if (type.equals("rest")) {
-            return "STOP _";
+            return "STOP .";
         } else {
-            return "____ _";
+            return ".... .";
         }
     }
 
@@ -198,7 +198,7 @@ public class Event implements Writable {
         if (isStaccato) {
             return "S";
         } else {
-            return "_";
+            return ".";
         }
     }
 }

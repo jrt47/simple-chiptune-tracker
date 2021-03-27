@@ -11,6 +11,8 @@ import java.util.Objects;
 // and have four instrument channels: pulse 1, pulse 2, triangle, and noise
 public class Track implements Writable {
     public static final int DEFAULT_BPM = 120;
+    public static final int MIN_BPM = 10;
+    public static final int MAX_BPM = 500;
 
     private String name;
     private int tempo;

@@ -46,9 +46,11 @@ public class NewMenu extends JPanel {
 
     private void createNewTrack() {
         String name = textField.getText();
-        resetTextField();
-        mainMenu.getTracker().addTrack(name);
-        mainMenu.openTrack(name);
+        if (!name.equals("")) {
+            resetTextField();
+            mainMenu.getTracker().addTrack(name);
+            mainMenu.openTrack(name);
+        }
     }
 
     public void resetTextField() {
