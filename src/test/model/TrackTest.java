@@ -521,6 +521,52 @@ class TrackTest {
     }
 
     @Test
+    void testEqualsNull() {
+        assertNotEquals(track, null);
+    }
+
+    @Test
+    void testEqualsPulse1Different() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        track2.addRest("pulse1", 1);
+        assertNotEquals(track1, track2);
+    }
+
+    @Test
+    void testEqualsPulse2Different() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        track2.addRest("pulse2", 1);
+        assertNotEquals(track1, track2);
+    }
+
+    @Test
+    void testEqualsTriangleDifferent() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        track2.addRest("triangle", 1);
+        assertNotEquals(track1, track2);
+    }
+
+    @Test
+    void testEqualsNoiseDifferent() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        track2.addRest("noise", 1);
+        assertNotEquals(track1, track2);
+    }
+
+    @Test
+    void testEqualsDifferentTempos() {
+        Track track1 = new Track("track");
+        Track track2 = new Track("track");
+        track1.setTempo(100);
+        track2.setTempo(140);
+        assertNotEquals(track1, track2);
+    }
+
+    @Test
     void testHashCode() {
         assertEquals(track, track);
         assertEquals(track.hashCode(), track.hashCode());
