@@ -103,8 +103,8 @@ public class TrackerTest {
         tracker.removeTrack("track2");
         assertEquals(1, tracker.getTrackList().size());
         assertFalse(tracker.getTrackList().contains(track1));
-        assertTrue(tracker.getTrackList().contains(track2));
-        assertFalse(tracker.getTrackList().contains(track3));
+        assertFalse(tracker.getTrackList().contains(track2));
+        assertTrue(tracker.getTrackList().contains(track3));
     }
 
     @Test

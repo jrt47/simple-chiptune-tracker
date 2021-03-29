@@ -514,4 +514,15 @@ class TrackTest {
         assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
+
+    @Test
+    void testEqualsDifferentClasses() {
+        assertNotEquals(track, new Object());
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(track, track);
+        assertEquals(track.hashCode(), track.hashCode());
+    }
 }

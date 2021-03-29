@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+// Represents the main menu for the tracker app
 public class MainMenu extends JFrame {
     private static final Dimension WINDOW_SIZE = new Dimension(290, 250);
     public static final int SPACING = 10;
@@ -20,7 +21,7 @@ public class MainMenu extends JFrame {
     private static final int SUB_BUTTON_WIDTH = (200 - SPACING) / 2;
     private static final Dimension MAIN_BUTTON_SIZE = new Dimension(MAIN_BUTTON_WIDTH, 40);
     private static final Dimension SUB_BUTTON_SIZE = new Dimension(SUB_BUTTON_WIDTH, 30);
-    private static final Dimension TEXT_BOX_SIZE = new Dimension(MAIN_BUTTON_WIDTH, 30);
+    private static final Dimension TEXT_COMPONENT_SIZE = new Dimension(MAIN_BUTTON_WIDTH, 30);
     public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
     private static final Font TITLE_FONT = new Font("SansSerif", Font.BOLD, 20);
 
@@ -41,6 +42,8 @@ public class MainMenu extends JFrame {
     private JButton loadButton;
     private JButton quitButton;
 
+    // MODIFIES: this
+    // EFFECTS: initializes and opens the main menu
     public MainMenu() {
         super("Simple Chiptune Tracker");
         initializeFields();
@@ -48,10 +51,13 @@ public class MainMenu extends JFrame {
         initializeInteraction();
     }
 
+    // EFFECTS: returns the tracker operated by the application
     public Tracker getTracker() {
         return tracker;
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the tracker app fields
     private void initializeFields() {
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
@@ -81,6 +87,8 @@ public class MainMenu extends JFrame {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the main menu graphics
     private void initializeGraphics() {
         setLayout(new FlowLayout());
         addTitle();
@@ -92,12 +100,16 @@ public class MainMenu extends JFrame {
         setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the title of the application to the frame
     private void addTitle() {
         JLabel title = new JLabel("Simple Chiptune Tracker");
         title.setFont(TITLE_FONT);
         add(title);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the tracker menu cards
     private void initializeCards() {
         CardLayout layout = new CardLayout();
         cardPanel = new JPanel(layout);
@@ -120,6 +132,8 @@ public class MainMenu extends JFrame {
         add(cardPanel);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the main menu card
     private void initializeMainMenu() {
         mainMenu.setLayout(new FlowLayout(FlowLayout.CENTER, SPACING, SPACING));
 
@@ -136,21 +150,29 @@ public class MainMenu extends JFrame {
         mainMenu.add(quitButton);
     }
 
+    // MODIFIES: button
+    // EFFECTS: formats the given button according to the main menu specifications
     private static void formatMainButton(JButton button) {
         button.setPreferredSize(MAIN_BUTTON_SIZE);
         button.setFont(FONT);
     }
 
+    // MODIFIES: button
+    // EFFECTS: formats the given button according to the sub-menu specifications
     public static void formatSubButton(JButton button) {
         button.setPreferredSize(SUB_BUTTON_SIZE);
         button.setFont(FONT);
     }
 
-    public static void formatTextBox(JComponent textBox) {
-        textBox.setPreferredSize(TEXT_BOX_SIZE);
-        textBox.setFont(FONT);
+    // MODIFIES: textComponent
+    // EFFECTS: formats the given text component according to the menu specifications
+    public static void formatTextComponent(JComponent textComponent) {
+        textComponent.setPreferredSize(TEXT_COMPONENT_SIZE);
+        textComponent.setFont(FONT);
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the interaction for the main menu buttons
     private void initializeInteraction() {
         MainMenuListener listener = new MainMenuListener();
         newButton.addActionListener(listener);
@@ -158,28 +180,37 @@ public class MainMenu extends JFrame {
         quitButton.addActionListener(listener);
     }
 
+    // MODIFIES: this
+    // EFFECTS: opens the new menu card
     private void openNewMenu() {
         newMenu.resetTextField();
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, "new");
     }
 
+    // MODIFIES: this
+    // EFFECTS: opens the load menu card
     private void openLoadMenu() {
         loadMenu.updateTracks();
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, "load");
     }
 
-    private void quit() {
+    // EFFECTS: saves the tracker data and quits the application
+    public void quit() {
         saveTracker();
         System.exit(0);
     }
 
+    // MODIFIES: this
+    // EFFECTS: opens the main menu from one of the sub-menus
     public void goBack() {
         CardLayout layout = (CardLayout) cardPanel.getLayout();
         layout.show(cardPanel, "main");
     }
 
+    // MODIFIES: this
+    // EFFECTS: closes the menu and opens the tracker application
     public void openTrack(String name) {
         Track track = tracker.getTrack(name);
         if (!(track == null)) {
@@ -188,8 +219,11 @@ public class MainMenu extends JFrame {
         }
     }
 
+    // action listener for main menu buttons
     private class MainMenuListener implements ActionListener {
 
+        // MODIFIES: MainMenu.this
+        // EFFECTS: performs the required operation when a button is pressed
         @Override
         public void actionPerformed(ActionEvent e) {
             Object source = e.getSource();

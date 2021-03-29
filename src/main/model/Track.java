@@ -203,6 +203,7 @@ public class Track implements Writable {
         noise.transposeDownByOctave();
     }
 
+    // EFFECTS: see super
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -214,12 +215,13 @@ public class Track implements Writable {
         Track track = (Track) o;
         return tempo == track.tempo
                 && name.equals(track.name)
-                && pulse1.equals(track.pulse1)
-                && pulse2.equals(track.pulse2)
-                && triangle.equals(track.triangle)
-                && noise.equals(track.noise);
+                && pulse1.isIdenticalTo(track.pulse1)
+                && pulse2.isIdenticalTo(track.pulse2)
+                && triangle.isIdenticalTo(track.triangle)
+                && noise.isIdenticalTo(track.noise);
     }
 
+    // EFFECTS: see super
     @Override
     public int hashCode() {
         return Objects.hash(name, tempo, pulse1, pulse2, triangle, noise);

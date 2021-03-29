@@ -355,29 +355,29 @@ public class EventTest {
 
     @Test
     void testToStringNote() {
-        testToString(1, false, "C--1 _");
+        testToString(1, false, "C--1 .");
         testToString(14, true, "C#-2 S");
-        testToString(27, false, "D--3 _");
+        testToString(27, false, "D--3 .");
         testToString(4, true, "D#-1 S");
-        testToString(17, false, "E--2 _");
+        testToString(17, false, "E--2 .");
         testToString(30, true, "F--3 S");
-        testToString(7, false, "F#-1 _");
+        testToString(7, false, "F#-1 .");
         testToString(20, true, "G--2 S");
-        testToString(33, false, "G#-3 _");
+        testToString(33, false, "G#-3 .");
         testToString(10, true, "A--1 S");
-        testToString(23, false, "A#-2 _");
+        testToString(23, false, "A#-2 .");
         testToString(36, true, "B--3 S");
     }
 
     @Test
     void testToStringBlank() {
         event.clear();
-        assertEquals("____ _", event.toString());
+        assertEquals(".... .", event.toString());
     }
 
     @Test
     void testToStringRest() {
         event.makeRest();
-        assertEquals("STOP _", event.toString());
+        assertEquals("STOP .", event.toString());
     }
 }

@@ -455,6 +455,17 @@ public class InstrumentChannelTest {
     }
 
     @Test
+    void testIsIdenticalToDifferentLengths() {
+        InstrumentChannel channel1 = new InstrumentChannel();
+        InstrumentChannel channel2 = new InstrumentChannel();
+        setupChannel1(channel1);
+        setupChannel2(channel2);
+        channel2.addBars(1);
+        assertFalse(channel1.isIdenticalTo(channel2));
+        assertFalse(channel2.isIdenticalTo(channel1));
+    }
+
+    @Test
     void testIsIdenticalToIdentical() {
         InstrumentChannel channel1 = new InstrumentChannel();
         InstrumentChannel channel2 = new InstrumentChannel();

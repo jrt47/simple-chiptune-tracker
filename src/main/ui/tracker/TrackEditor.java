@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.EventObject;
 import java.util.HashMap;
 
+// represents the track editor component within the main tracker application
 public class TrackEditor extends JTable {
     private static final String FONT_NAME = "Monospaced";
     private static final int FONT_SIZE = 16;
@@ -20,6 +21,7 @@ public class TrackEditor extends JTable {
 
     private TrackerApp trackerApp;
 
+    // EFFECTS: constructs and initializes the track editor
     public TrackEditor(TrackerApp trackerApp) {
         this.trackerApp = trackerApp;
         setModel(new TrackEditorTableModel());
@@ -30,10 +32,18 @@ public class TrackEditor extends JTable {
         trackerApp.add(scrollPane);
     }
 
+    // MODIFIES: this
+    // EFFECTS: notifies the track editor that the track data has been modified
     public void dataChanged() {
+        int selectedRow = getSelectedRow();
+        int selectedColumn = getSelectedColumn();
         ((AbstractTableModel) getModel()).fireTableDataChanged();
+        setRowSelectionInterval(selectedRow, selectedRow);
+        setColumnSelectionInterval(selectedColumn, selectedColumn);
     }
 
+    // MODIFIES: this
+    // EFFECTS: formats the track editor component
     private void formatTrackEditor() {
         setFillsViewportHeight(true);
         setFont(FONT);
@@ -41,39 +51,49 @@ public class TrackEditor extends JTable {
         setShowHorizontalLines(false);
         setIntercellSpacing(new Dimension(5, 0));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setRowSelectionInterval(0, 0);
+        setColumnSelectionInterval(0, 0);
         setRowHeight(20);
         getColumnModel().getColumn(0).setPreferredWidth(40);
         for (int i = 1; i < 5; i++) {
             getColumnModel().getColumn(i).setPreferredWidth(COLUMN_WIDTH);
         }
-        formatCell();
+        formatCells();
     }
 
-    private void formatCell() {
+    // MODIFIES: this
+    // EFFECTS: formats the track editor cells
+    private void formatCells() {
         JTextField editorTextField = new JTextField("");
         editorTextField.setFont(FONT);
         setDefaultEditor(Object.class, new DefaultCellEditor(editorTextField));
         setDefaultRenderer(Object.class, new TrackEditorCellRenderer());
     }
 
+    // MODIFIES: this
+    // EFFECTS: formats the scroll pane that the track editor is contained within
     private void formatScrollPane(JScrollPane scrollPane) {
         int width = getPreferredSize().width;
         int height = getPreferredSize().height + getTableHeader().getPreferredSize().height + 4;
         scrollPane.setPreferredSize(new Dimension(width, height));
     }
 
+    // this method is overridden to customize the cell editor text
     @Override
     public boolean editCellAt(int row, int column, EventObject e) {
         boolean result = super.editCellAt(row, column, e);
-        clearBlankEventEditor(row, column);
+        setEditorText(row, column);
         return result;
     }
 
+    // EFFECTS: returns the given string as an editor-compatible string
     private static String toEditorString(String string) {
         return string.replaceAll("[-. ]", "").toUpperCase();
     }
 
-    private void clearBlankEventEditor(int row, int column) {
+    // MODIFIES: this
+    // EFFECTS: sets the cell editor text according to the data in the cell
+    private void setEditorText(int row, int column) {
         Component editor = getEditorComponent();
         if (editor != null) {
             String text = toEditorString(getValueAt(row, column).toString());
@@ -81,6 +101,7 @@ public class TrackEditor extends JTable {
         }
     }
 
+    // EFFECTS: returns a hashmap mapping editor strings to their corresponding events
     private static HashMap<String, Event> makeStringToEvent() {
         HashMap<String, Event> hashMap = new HashMap<>();
 
@@ -110,6 +131,8 @@ public class TrackEditor extends JTable {
         return hashMap;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the event at the given row and channel according to the given editor string
     private void setEventAt(String channel, int row, String string) {
         Track track = trackerApp.getTrack();
         Event event = STRING_TO_EVENT.get(toEditorString(string));
@@ -136,18 +159,22 @@ public class TrackEditor extends JTable {
         }
     }
 
+    // a table model that uses the current track to display the correct data
     private class TrackEditorTableModel extends AbstractTableModel {
 
+        // EFFECTS: see super
         @Override
         public int getRowCount() {
             return trackerApp.getTrack().numberOfRows();
         }
 
+        // EFFECTS: see super
         @Override
         public int getColumnCount() {
             return 5;
         }
 
+        // EFFECTS: see super
         @Override
         public String getColumnName(int columnIndex) {
             switch (columnIndex) {
@@ -166,6 +193,7 @@ public class TrackEditor extends JTable {
             }
         }
 
+        // EFFECTS: see super
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             Track track = trackerApp.getTrack();
@@ -186,11 +214,14 @@ public class TrackEditor extends JTable {
             }
         }
 
+        // EFFECTS: see super
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return columnIndex != 0;
         }
 
+        // MODIFIES: this
+        // EFFECTS: see super
         @Override
         public void setValueAt(Object value, int rowIndex, int columnIndex) {
             String channel = null;
@@ -211,8 +242,10 @@ public class TrackEditor extends JTable {
         }
     }
 
+    // a cell renderer that makes the row number of the first row of each bar bold
     private class TrackEditorCellRenderer extends DefaultTableCellRenderer {
 
+        // EFFECTS: see super
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {

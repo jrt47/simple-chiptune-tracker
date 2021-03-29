@@ -2,51 +2,60 @@ package ui.tracker;
 
 import model.Track;
 import ui.menu.MainMenu;
-import ui.tracker.taskbar.EditMenu;
-import ui.tracker.taskbar.FileMenu;
-import ui.tracker.taskbar.HelpMenu;
-import ui.tracker.taskbar.ToolBar;
+import ui.tracker.menubar.EditMenu;
+import ui.tracker.menubar.FileMenu;
+import ui.tracker.menubar.HelpMenu;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 
+// represents the main tracker application where track can be edited
 public class TrackerApp extends JFrame {
-    public static final Font FONT = new Font("SansSerif", Font.PLAIN, 14);
+    public static final Font FONT = new FontUIResource("SansSerif", Font.PLAIN, 14);
 
     private Track track;
     private TrackEditor trackEditor;
     private MainMenu mainMenu;
 
+    // EFFECTS: constructs and initializes the main tracker application
     public TrackerApp(Track track, MainMenu mainMenu) {
         super(track.getName());
         this.track = track;
         this.mainMenu = mainMenu;
-        initializeGraphics();
-        // TODO
+        initializeComponents();
     }
 
+    // EFFECTS: returns the track being operated by the tracker app
     public Track getTrack() {
         return track;
     }
 
+    // EFFECTS: returns the tracker's track editor component
     public TrackEditor getTrackEditor() {
         return trackEditor;
     }
 
+    // EFFECTS: returns the main menu for the tracker app
     public MainMenu getMainMenu() {
         return mainMenu;
     }
 
-    private void initializeGraphics() {
-        initializeToolbar();
+    // MODIFIES: this
+    // EFFECTS: initializes the tracker app components
+    private void initializeComponents() {
+        initializeTaskBar();
         trackEditor = new TrackEditor(this);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+        setUIFont();
         setVisible(true);
     }
 
-    private void initializeToolbar() {
+    // MODIFIES: this
+    // EFFECTS: initializes the tracker app task bar which includes the menu bar and the tool bar
+    private void initializeTaskBar() {
         JPanel taskBar = new JPanel(new BorderLayout());
 
         JMenuBar menuBar = new JMenuBar();
@@ -67,6 +76,24 @@ public class TrackerApp extends JFrame {
         add(taskBar, BorderLayout.NORTH);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the default font for all tracker app components
+    private void setUIFont() {
+        UIManager.put("Button.font", FONT);
+        UIManager.put("ComboBox.font", FONT);
+        UIManager.put("Label.font", FONT);
+        UIManager.put("MenuBar.font", FONT);
+        UIManager.put("MenuItem.font", FONT);
+        UIManager.put("Menu.font", FONT);
+        UIManager.put("OptionPane.font", FONT);
+        UIManager.put("Panel.font", FONT);
+        UIManager.put("TextField.font", FONT);
+        UIManager.put("CheckBox.font", FONT);
+        UIManager.put("RadioButton.font", FONT);
+    }
+
+    // MODIFIES: menu
+    // EFFECTS: formats the given menu according to the taskbar defaults
     public static void formatMenu(JMenu menu) {
         int width = menu.getPreferredSize().width;
         menu.setPreferredSize(new Dimension(width, ToolBar.COMPONENT_HEIGHT));
