@@ -10,7 +10,6 @@ import java.util.Objects;
 
 // Represents an instrument channel inside of a track
 // Instrument channels have a set amount of bars and can have notes or rests placed in them
-// TODO: change to 0-based indexing
 public class InstrumentChannel implements Writable {
     public static final int INITIAL_NUM_OF_BARS = 2;
     public static final int ROWS_PER_BAR = 16;

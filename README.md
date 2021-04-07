@@ -38,4 +38,4 @@ barrier. I am excited to start using the application when it is finished.
 
 I chose to implement a type hierarchy in the sound package of the ui package. The classes NoiseOscillator,
 PulseOscillator, and TriangleOscillator all have distinct functionality and extend the abstract class called
-Oscillator. 
+Oscillator.
