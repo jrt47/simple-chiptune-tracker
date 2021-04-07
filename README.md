@@ -34,3 +34,8 @@ barrier. I am excited to start using the application when it is finished.
 - As a user, I want to be able to load each of my tracks from file
 - As a user, I want to be able to delete each of my tracks from file
 
+## Phase 4: Task 2
+
+I chose to implement a type hierarchy in the sound package of the ui package. The classes NoiseOscillator,
+PulseOscillator, and TriangleOscillator all have distinct functionality and extend the abstract class called
+Oscillator. 
