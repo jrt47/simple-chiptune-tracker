@@ -68,8 +68,8 @@ public class ClearDialog extends SelectionDialog {
         if (allRowsCheckBox.isSelected()) {
             trackerApp.getTrack().clear();
         } else {
-            int firstRow = (int) firstRowSpinner.getValue();
-            int lastRow = (int) lastRowSpinner.getValue();
+            int firstRow = (int) firstRowSpinner.getValue() + 1;
+            int lastRow = (int) lastRowSpinner.getValue() + 1;
             trackerApp.getTrack().clear(firstRow, lastRow);
         }
     }

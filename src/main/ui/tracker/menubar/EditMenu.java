@@ -13,7 +13,7 @@ public class EditMenu extends JMenu {
     public static final Dimension BUTTON_SIZE = new Dimension(78, 28);
     public static final int SPACING = 10;
 
-    private TrackerApp trackerApp;
+    private final TrackerApp trackerApp;
 
     private JMenuItem addBarsButton;
     private JMenuItem removeBarsButton;

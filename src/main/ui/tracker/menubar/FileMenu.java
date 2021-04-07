@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 // represents the tracker application file menu in the menu bar
 public class FileMenu extends JMenu {
-    private TrackerApp trackerApp;
+    private final TrackerApp trackerApp;
 
     private JMenuItem renameButton;
     private JMenuItem quitButton;

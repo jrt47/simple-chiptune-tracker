@@ -10,7 +10,7 @@ import java.util.List;
 
 // Represents the load menu card for the tracker application menu
 public class LoadMenu extends JPanel {
-    private MainMenu mainMenu;
+    private final MainMenu mainMenu;
 
     private JComboBox<String> comboBox;
     private JButton openButton;

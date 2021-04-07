@@ -3,11 +3,13 @@ package model;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.util.Objects;
+
 // Represents an event that can be placed inside a track
 // Can be a note, a rest, or a blank event
 // Notes have a pitch and can be staccato or not staccato
 public class Event implements Writable {
-    public static final int NUM_OCTAVES = 3;
+    public static final int NUM_OCTAVES = 5;
     public static final int MAX_PITCH = NUM_OCTAVES * 12;
 
     private String type;
@@ -110,9 +112,23 @@ public class Event implements Writable {
         transpose(-12);
     }
 
-    // EFFECTS: produce true if this and event have the same contents, false otherwise
-    public boolean isIdenticalTo(Event event) {
-        return type.equals(event.type) && pitch == event.pitch && isStaccato == event.isStaccato;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Event event = (Event) o;
+        return pitch == event.pitch
+                && isStaccato == event.isStaccato
+                && type.equals(event.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, pitch, isStaccato);
     }
 
     // EFFECTS: represents the note as a 6 character string

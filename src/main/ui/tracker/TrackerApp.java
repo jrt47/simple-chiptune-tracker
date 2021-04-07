@@ -2,6 +2,7 @@ package ui.tracker;
 
 import model.Track;
 import ui.menu.MainMenu;
+import ui.sound.TrackPlayer;
 import ui.tracker.menubar.EditMenu;
 import ui.tracker.menubar.FileMenu;
 import ui.tracker.menubar.HelpMenu;
@@ -14,9 +15,11 @@ import java.awt.*;
 public class TrackerApp extends JFrame {
     public static final Font FONT = new FontUIResource("SansSerif", Font.PLAIN, 14);
 
-    private Track track;
+    private final Track track;
+    private ToolBar toolBar;
     private TrackEditor trackEditor;
-    private MainMenu mainMenu;
+    private final TrackPlayer trackPlayer;
+    private final MainMenu mainMenu;
 
     // EFFECTS: constructs and initializes the main tracker application
     public TrackerApp(Track track, MainMenu mainMenu) {
@@ -24,6 +27,7 @@ public class TrackerApp extends JFrame {
         this.track = track;
         this.mainMenu = mainMenu;
         initializeComponents();
+        trackPlayer = new TrackPlayer(this);
     }
 
     // EFFECTS: returns the track being operated by the tracker app
@@ -31,9 +35,19 @@ public class TrackerApp extends JFrame {
         return track;
     }
 
+    // EFFECTS: return's the tracker's toolbar component
+    public ToolBar getToolBar() {
+        return toolBar;
+    }
+
     // EFFECTS: returns the tracker's track editor component
     public TrackEditor getTrackEditor() {
         return trackEditor;
+    }
+
+    // EFFECTS: returns the tracker's track player component
+    public TrackPlayer getTrackPlayer() {
+        return trackPlayer;
     }
 
     // EFFECTS: returns the main menu for the tracker app
@@ -46,7 +60,7 @@ public class TrackerApp extends JFrame {
     private void initializeComponents() {
         initializeTaskBar();
         trackEditor = new TrackEditor(this);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
         setUIFont();
@@ -68,7 +82,7 @@ public class TrackerApp extends JFrame {
         menuBar.add(editMenu);
         menuBar.add(helpMenu);
 
-        ToolBar toolBar = new ToolBar(this);
+        toolBar = new ToolBar(this);
 
         taskBar.add(menuBar, BorderLayout.NORTH);
         taskBar.add(toolBar, BorderLayout.SOUTH);

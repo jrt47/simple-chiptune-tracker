@@ -176,7 +176,7 @@
                 "isStaccato": false
             },
             {
-                "pitch": 33,
+                "pitch": 57,
                 "type": "note",
                 "isStaccato": true
             },
@@ -211,7 +211,7 @@
                 "isStaccato": false
             },
             {
-                "pitch": 36,
+                "pitch": 60,
                 "type": "note",
                 "isStaccato": false
             },
@@ -1384,7 +1384,7 @@
         ]},
         "triangle": {"eventList": [
             {
-                "pitch": 24,
+                "pitch": 48,
                 "type": "note",
                 "isStaccato": false
             },

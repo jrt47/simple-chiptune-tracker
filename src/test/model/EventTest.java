@@ -245,104 +245,119 @@ public class EventTest {
     }
 
     @Test
-    void testIsIdenticalToNotesSamePitch() {
+    void testEqualsNotesSamePitch() {
         Event note1 = new Event();
         note1.makeNote(14);
         Event note2 = new Event();
         note2.makeNote(14);
-        assertTrue(note1.isIdenticalTo(note2));
+        assertEquals(note2, note1);
+        assertEquals(note2.hashCode(), note1.hashCode());
     }
 
     @Test
-    void testIsIdenticalToNotesSamePitchOneStaccato() {
+    void testEqualsNotesSamePitchOneStaccato() {
         Event note1 = new Event();
         note1.makeNote(6);
         Event note2 = new Event();
         note2.makeNote(6);
         note2.makeStaccato();
-        assertFalse(note1.isIdenticalTo(note2));
+        assertNotEquals(note2, note1);
     }
 
     @Test
-    void testIsIdenticalToNotesSamePitchBothStaccato() {
+    void testEqualsNotesSamePitchBothStaccato() {
         Event note1 = new Event();
         note1.makeNote(1);
         note1.makeStaccato();
         Event note2 = new Event();
         note2.makeNote(1);
         note2.makeStaccato();
-        assertTrue(note1.isIdenticalTo(note2));
+        assertEquals(note2, note1);
+        assertEquals(note2.hashCode(), note1.hashCode());
     }
 
     @Test
-    void testIsIdenticalToNotesDifferentPitch() {
+    void testEqualsNotesDifferentPitch() {
         Event note1 = new Event();
         note1.makeNote(12);
         Event note2 = new Event();
         note2.makeNote(20);
-        assertFalse(note1.isIdenticalTo(note2));
+        assertNotEquals(note2, note1);
     }
 
     @Test
-    void testIsIdenticalToNotesDifferentPitchOneStaccato() {
+    void testEqualsNotesDifferentPitchOneStaccato() {
         Event note1 = new Event();
         note1.makeNote(3);
         Event note2 = new Event();
         note2.makeNote(1);
         note2.makeStaccato();
-        assertFalse(note1.isIdenticalTo(note2));
+        assertNotEquals(note2, note1);
     }
 
     @Test
-    void testIsIdentiaclToNotesDifferentPitchBothStaccato() {
+    void testEqualsNotesDifferentPitchBothStaccato() {
         Event note1 = new Event();
         note1.makeNote(18);
         note1.makeStaccato();
         Event note2 = new Event();
         note2.makeNote(19);
         note2.makeStaccato();
-        assertFalse(note1.isIdenticalTo(note2));
+        assertNotEquals(note2, note1);
     }
 
     @Test
-    void testIsIdenticalToRests() {
+    void testEqualsRests() {
         Event rest1 = new Event();
         rest1.makeRest();
         Event rest2 = new Event();
         rest2.makeRest();
-        assertTrue(rest1.isIdenticalTo(rest2));
+        assertEquals(rest2, rest1);
+        assertEquals(rest2.hashCode(), rest1.hashCode());
     }
 
     @Test
-    void testIsIdenticalToBlanks() {
+    void testEqualsBlanks() {
         Event blank1 = new Event();
         Event blank2 = new Event();
-        assertTrue(blank1.isIdenticalTo(blank2));
+        assertEquals(blank2, blank1);
+        assertEquals(blank2.hashCode(), blank1.hashCode());
     }
 
     @Test
-    void testIsIdenticalToNoteAndRest() {
+    void testEqualsNoteAndRest() {
         Event note = new Event();
         note.makeNote(5);
         Event rest = new Event();
         rest.makeRest();
-        assertFalse(note.isIdenticalTo(rest));
+        assertNotEquals(rest, note);
     }
 
     @Test
-    void testIsIdenticalToNoteAndBlank() {
+    void testEqualsNoteAndBlank() {
         Event note = new Event();
         note.makeNote(5);
         Event blank = new Event();
-        assertFalse(note.isIdenticalTo(blank));
+        assertNotEquals(blank, note);
     }
 
     @Test
-    void testIsIdenticalToRestAndBlank() {
+    void testEqualsRestAndBlank() {
         Event rest = new Event();
         rest.makeRest();
         Event blank = new Event();
-        assertFalse(rest.isIdenticalTo(blank));
+        assertNotEquals(blank, rest);
+    }
+
+    @Test
+    void testEqualsSameObject() {
+        assertEquals(event, event);
+        assertEquals(event.hashCode(), event.hashCode());
+    }
+
+    @Test
+    void testEqualsDifferentClasses() {
+        assertNotEquals(event, new Object());
     }
 
     void testToString(int pitch, boolean isStaccato, String expected) {

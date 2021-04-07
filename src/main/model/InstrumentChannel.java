@@ -6,6 +6,7 @@ import persistence.Writable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // Represents an instrument channel inside of a track
 // Instrument channels have a set amount of bars and can have notes or rests placed in them
@@ -135,22 +136,22 @@ public class InstrumentChannel implements Writable {
         }
     }
 
-    // EFFECTS: produce true if this and channel have the same contents, false otherwise
-    public boolean isIdenticalTo(InstrumentChannel channel) {
-        if (!(this.numberOfBars() == channel.numberOfBars())) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        for (int i = 0; i < eventList.size(); i++) {
-            Event event1 = this.eventList.get(i);
-            Event event2 = channel.eventList.get(i);
-            if (!event1.isIdenticalTo(event2)) {
-                return false;
-            }
-        }
-        return true;
+        InstrumentChannel that = (InstrumentChannel) o;
+        return eventList.equals(that.eventList);
     }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventList);
+    }
 
     // EFFECTS: returns this as JSON object
     // (modelled after JsonSerializationDemo repository)

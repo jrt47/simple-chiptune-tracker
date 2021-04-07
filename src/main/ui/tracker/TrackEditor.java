@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.EventObject;
 import java.util.HashMap;
+import java.util.Map;
 
 // represents the track editor component within the main tracker application
 public class TrackEditor extends JTable {
@@ -17,9 +18,10 @@ public class TrackEditor extends JTable {
     private static final Font FONT = new Font(FONT_NAME, Font.PLAIN, FONT_SIZE);
     private static final Font BOLD_FONT = new Font(FONT_NAME, Font.BOLD, FONT_SIZE);
     private static final int COLUMN_WIDTH = 71;
-    private static final HashMap<String, Event> STRING_TO_EVENT = makeStringToEvent();
+    private static final int HEIGHT = 668;
+    private static final Map<String, Event> STRING_TO_EVENT = makeStringToEvent();
 
-    private TrackerApp trackerApp;
+    private final TrackerApp trackerApp;
 
     // EFFECTS: constructs and initializes the track editor
     public TrackEditor(TrackerApp trackerApp) {
@@ -75,7 +77,7 @@ public class TrackEditor extends JTable {
     private void formatScrollPane(JScrollPane scrollPane) {
         int width = getPreferredSize().width;
         int height = getPreferredSize().height + getTableHeader().getPreferredSize().height + 4;
-        scrollPane.setPreferredSize(new Dimension(width, height));
+        scrollPane.setPreferredSize(new Dimension(width, HEIGHT));
     }
 
     // this method is overridden to customize the cell editor text
@@ -88,7 +90,10 @@ public class TrackEditor extends JTable {
 
     // EFFECTS: returns the given string as an editor-compatible string
     private static String toEditorString(String string) {
-        return string.replaceAll("[-. ]", "").toUpperCase();
+        String editorString = string.toUpperCase();
+        editorString = editorString.replaceAll("[-. ]", "");
+        editorString = editorString.replaceAll("TOP", "");
+        return editorString;
     }
 
     // MODIFIES: this
@@ -101,18 +106,17 @@ public class TrackEditor extends JTable {
         }
     }
 
-    // EFFECTS: returns a hashmap mapping editor strings to their corresponding events
-    private static HashMap<String, Event> makeStringToEvent() {
-        HashMap<String, Event> hashMap = new HashMap<>();
+    // EFFECTS: returns a map mapping strings that a user can enter into the editor to their corresponding events
+    private static Map<String, Event> makeStringToEvent() {
+        Map<String, Event> hashMap = new HashMap<>();
 
         Event blank = new Event();
         blank.clear();
         Event rest = new Event();
         rest.makeRest();
 
-        hashMap.put("", blank);
-        hashMap.put("STOP", rest);
-        hashMap.put("S", rest);
+        hashMap.put(toEditorString(blank.toString()), blank);
+        hashMap.put(toEditorString(rest.toString()), rest);
 
         for (int i = 1; i <= Event.MAX_PITCH; i++) {
             Event note = new Event();
@@ -242,7 +246,7 @@ public class TrackEditor extends JTable {
         }
     }
 
-    // a cell renderer that makes the row number of the first row of each bar bold
+    // a cell renderer that makes the row number of the first row of each beat bold
     private class TrackEditorCellRenderer extends DefaultTableCellRenderer {
 
         // EFFECTS: see super
@@ -250,7 +254,7 @@ public class TrackEditor extends JTable {
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
             Component renderer = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (row % 16 == 0 && column == 0) {
+            if (row % 4 == 0 && column == 0) {
                 renderer.setFont(BOLD_FONT);
             }
             return renderer;

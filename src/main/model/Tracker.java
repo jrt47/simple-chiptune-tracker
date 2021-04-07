@@ -9,7 +9,7 @@ import java.util.List;
 
 // Represents all tracks stored in the tracker
 public class Tracker implements Writable {
-    private List<Track> trackList;
+    private final List<Track> trackList;
 
     // EFFECTS: Constructs an empty tracker
     public Tracker() {

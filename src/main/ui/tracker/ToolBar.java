@@ -8,22 +8,34 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 // represents the tracker application toolbar
 public class ToolBar extends JPanel {
     public static final int COMPONENT_HEIGHT = 30;
+    private static final int MEDIA_CONTROL_BUTTON_WIDTH = 46;
     private static final int SPACING = 20;
 
-    private TrackerApp trackerApp;
+    private final TrackerApp trackerApp;
 
     private JSpinner tempoSpinner;
     private JButton addBarButton;
+    private JToggleButton playPauseButton;
+    private JButton stopButton;
 
     // EFFECTS: constructs and initializes the toolbar
     public ToolBar(TrackerApp trackerApp) {
         this.trackerApp = trackerApp;
         initializeGraphics();
         initializeInteraction();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: resets all media play buttons in the tool bar
+    public void resetMediaButtons() {
+        playPauseButton.setSelected(false);
+        playPauseButton.setText("▶");
     }
 
     // MODIFIES: this
@@ -34,6 +46,22 @@ public class ToolBar extends JPanel {
         initializeTempoEditor();
         add(Box.createHorizontalStrut(SPACING));
         initializeBarsEditor();
+        add(Box.createHorizontalStrut(SPACING));
+        initializePlayPauseButton();
+        add(Box.createHorizontalStrut(SPACING / 2));
+        initializeStopButton();
+    }
+
+    private void initializeStopButton() {
+        stopButton = new JButton("⏹");
+        stopButton.setPreferredSize(new Dimension(MEDIA_CONTROL_BUTTON_WIDTH, COMPONENT_HEIGHT));
+        add(stopButton);
+    }
+
+    private void initializePlayPauseButton() {
+        playPauseButton = new JToggleButton("▶");
+        playPauseButton.setPreferredSize(new Dimension(MEDIA_CONTROL_BUTTON_WIDTH, COMPONENT_HEIGHT));
+        add(playPauseButton);
     }
 
     // MODIFIES: this
@@ -64,8 +92,12 @@ public class ToolBar extends JPanel {
     // MODIFIES: this
     // EFFECTS: initializes interaction for the toolbar components
     private void initializeInteraction() {
+        ButtonListener buttonListener = new ButtonListener();
+
         tempoSpinner.addChangeListener(new TempoSpinnerListener());
-        addBarButton.addActionListener(new AddBarButtonListener());
+        addBarButton.addActionListener(buttonListener);
+        playPauseButton.addItemListener(new PlayPauseListener());
+        stopButton.addActionListener(buttonListener);
     }
 
     // a change listener for the toolbar tempo spinner
@@ -80,15 +112,36 @@ public class ToolBar extends JPanel {
         }
     }
 
-    // an action listener for the add bar button
-    private class AddBarButtonListener implements ActionListener {
+    // an action listener for the tool bar buttons
+    private class ButtonListener implements ActionListener {
 
         // MODIFIES: this
         // EFFECTS: adds a bar when the add bar button is pressed
         @Override
         public void actionPerformed(ActionEvent e) {
-            trackerApp.getTrack().addBars(1);
-            trackerApp.getTrackEditor().dataChanged();
+            Object source = e.getSource();
+            if (source == addBarButton) {
+                trackerApp.getTrack().addBars(1);
+                trackerApp.getTrackEditor().dataChanged();
+            } else if (source == stopButton) {
+                resetMediaButtons();
+                trackerApp.getTrackPlayer().stop();
+            }
+        }
+    }
+
+    private class PlayPauseListener implements ItemListener {
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            int stateChange = e.getStateChange();
+            if (stateChange == ItemEvent.SELECTED) {
+                playPauseButton.setText("❚❚");
+                trackerApp.getTrackPlayer().play();
+            } else if (stateChange == ItemEvent.DESELECTED) {
+                playPauseButton.setText("▶");
+                trackerApp.getTrackPlayer().pause();
+            }
         }
     }
 }

@@ -31,10 +31,10 @@ class TrackTest {
         assertEquals("track", track.getName());
         assertEquals(Track.DEFAULT_BPM, track.getTempo());
         for (int i = 1; i <= InstrumentChannel.INITIAL_NUM_OF_BARS * InstrumentChannel.ROWS_PER_BAR; i++) {
-            assertTrue(event.isIdenticalTo(track.getEvent("pulse1", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("pulse2", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("triangle", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("noise", i)));
+            assertEquals(event, track.getEvent("pulse1", i));
+            assertEquals(event, track.getEvent("pulse2", i));
+            assertEquals(event, track.getEvent("triangle", i));
+            assertEquals(event, track.getEvent("noise", i));
         }
     }
 
@@ -105,28 +105,28 @@ class TrackTest {
     void testGetEventBlank() {
         event.clear();
         track.clear("pulse1", 1);
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 1)));
+        assertEquals(event, track.getEvent("pulse1", 1));
     }
 
     @Test
     void testGetEventRest() {
         event.makeRest();
         track.addRest("pulse2", 5);
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 5)));
+        assertEquals(event, track.getEvent("pulse2", 5));
     }
 
     @Test
     void testGetEventNote() {
         event.makeNote(1);
         track.addNote("triangle", 10, 1);
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 10)));
+        assertEquals(event, track.getEvent("triangle", 10));
     }
 
     @Test
     void testAddRest() {
         event.makeRest();
         track.addRest("noise", 12);
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 12)));
+        assertEquals(event, track.getEvent("noise", 12));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -134,7 +134,7 @@ class TrackTest {
     void testAddNote() {
         event.makeNote(10);
         track.addNote("pulse1", 3, 10);
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 3)));
+        assertEquals(event, track.getEvent("pulse1", 3));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -148,17 +148,17 @@ class TrackTest {
         }
         for (int i = 1; i <= 32; i++) {
             event.makeNote(i);
-            assertTrue(event.isIdenticalTo(track.getEvent("pulse1", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("pulse2", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("triangle", i)));
-            assertTrue(event.isIdenticalTo(track.getEvent("noise", i)));
+            assertEquals(event, track.getEvent("pulse1", i));
+            assertEquals(event, track.getEvent("pulse2", i));
+            assertEquals(event, track.getEvent("triangle", i));
+            assertEquals(event, track.getEvent("noise", i));
         }
     }
 
     @Test
     void testMakeStaccatoBlank() {
         assertFalse(track.makeStaccato("pulse2", 8));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 8)));
+        assertEquals(event, track.getEvent("pulse2", 8));
     }
 
     @Test
@@ -166,7 +166,7 @@ class TrackTest {
         event.makeRest();
         track.addRest("triangle", 10);
         assertFalse(track.makeStaccato("triangle", 10));
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 10)));
+        assertEquals(event, track.getEvent("triangle", 10));
     }
 
     @Test
@@ -175,7 +175,7 @@ class TrackTest {
         event.makeStaccato();
         track.addNote("noise", 2, 5);
         assertTrue(track.makeStaccato("noise", 2));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 2)));
+        assertEquals(event, track.getEvent("noise", 2));
     }
 
     @Test
@@ -185,13 +185,13 @@ class TrackTest {
         track.addNote("pulse1", 16, 4);
         track.makeStaccato("pulse1", 16);
         assertTrue(track.makeStaccato("pulse1", 16));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 16)));
+        assertEquals(event, track.getEvent("pulse1", 16));
     }
 
     @Test
     void testMakeNotStaccatoBlank() {
         assertFalse(track.makeNotStaccato("pulse2", 14));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 14)));
+        assertEquals(event, track.getEvent("pulse2", 14));
     }
 
     @Test
@@ -199,7 +199,7 @@ class TrackTest {
         event.makeRest();
         track.addRest("triangle", 16);
         assertFalse(track.makeNotStaccato("triangle", 16));
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 16)));
+        assertEquals(event, track.getEvent("triangle", 16));
     }
 
     @Test
@@ -207,7 +207,7 @@ class TrackTest {
         event.makeNote(11);
         track.addNote("noise", 3, 11);
         assertTrue(track.makeNotStaccato("noise", 3));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 3)));
+        assertEquals(event, track.getEvent("noise", 3));
     }
 
     @Test
@@ -216,13 +216,13 @@ class TrackTest {
         track.addNote("pulse1", 12, 20);
         track.makeStaccato("pulse1", 12);
         assertTrue(track.makeNotStaccato("pulse1", 12));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 12)));
+        assertEquals(event, track.getEvent("pulse1", 12));
     }
 
     @Test
     void testClearBlank() {
         track.clear("pulse2", 7);
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 7)));
+        assertEquals(event, track.getEvent("pulse2", 7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -230,7 +230,7 @@ class TrackTest {
     void testClearRest() {
         track.addRest("triangle", 7);
         track.clear("triangle", 7);
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 7)));
+        assertEquals(event, track.getEvent("triangle", 7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -238,7 +238,7 @@ class TrackTest {
     void testClearNote() {
         track.addNote("noise", 7, 9);
         track.clear("noise", 7);
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 7)));
+        assertEquals(event, track.getEvent("noise", 7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -247,7 +247,7 @@ class TrackTest {
         track.addNote("pulse1", 7, 9);
         track.makeStaccato("pulse1", 7);
         track.clear("pulse1", 7);
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 7)));
+        assertEquals(event, track.getEvent("pulse1", 7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -288,16 +288,16 @@ class TrackTest {
     void testClearRowsInChannel() {
         setupTrackTemplate();
         track.clear("pulse1", 6, 10);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(event, track.getEvent("pulse1", 7));
+        assertEquals(event, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -305,16 +305,16 @@ class TrackTest {
     void testClearRows() {
         setupTrackTemplate();
         track.clear(6, 10);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(event, track.getEvent("pulse1", 7));
+        assertEquals(event, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(event, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(event, track.getEvent("noise", 6));
+        assertEquals(event, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -322,16 +322,16 @@ class TrackTest {
     void testClearChannel() {
         setupTrackTemplate();
         track.clear("pulse1");
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(event, track.getEvent("pulse1", 3));
+        assertEquals(event, track.getEvent("pulse1", 7));
+        assertEquals(event, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -339,16 +339,16 @@ class TrackTest {
     void testClearTrack() {
         setupTrackTemplate();
         track.clear();
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(event.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(event.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(event.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(event, track.getEvent("pulse1", 3));
+        assertEquals(event, track.getEvent("pulse1", 7));
+        assertEquals(event, track.getEvent("pulse1", 10));
+        assertEquals(event, track.getEvent("pulse2", 2));
+        assertEquals(event, track.getEvent("pulse2", 4));
+        assertEquals(event, track.getEvent("triangle", 1));
+        assertEquals(event, track.getEvent("triangle", 8));
+        assertEquals(event, track.getEvent("noise", 5));
+        assertEquals(event, track.getEvent("noise", 6));
+        assertEquals(event, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -358,16 +358,16 @@ class TrackTest {
         track.transpose("pulse1", 2);
         e1.makeNote(Event.MAX_PITCH - 1);
         e3.makeNote(Event.MAX_PITCH - 10);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -377,16 +377,16 @@ class TrackTest {
         track.transpose("noise", -4);
         e8.makeNote(7);
         e9.makeNote(9);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -401,16 +401,16 @@ class TrackTest {
         e6.makeNote(Event.MAX_PITCH - 7);
         e8.makeNote(16);
         e9.makeNote(6);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -425,16 +425,16 @@ class TrackTest {
         e6.makeNote(Event.MAX_PITCH - 16);
         e8.makeNote(7);
         e9.makeNote(9);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -443,16 +443,16 @@ class TrackTest {
         setupTrackTemplate();
         track.transposeUpByOctave("triangle");
         e6.makeNote(Event.MAX_PITCH);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -465,16 +465,16 @@ class TrackTest {
         e6.makeNote(Event.MAX_PITCH);
         e8.makeNote(23);
         e9.makeNote(13);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -482,16 +482,16 @@ class TrackTest {
     void testTransposeDownByOctaveChannel() {
         setupTrackTemplate();
         track.transposeDownByOctave("pulse2");
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -502,16 +502,16 @@ class TrackTest {
         e1.makeNote(Event.MAX_PITCH - 15);
         e3.makeNote(Event.MAX_PITCH - 12);
         e6.makeNote(Event.MAX_PITCH - 24);
-        assertTrue(e1.isIdenticalTo(track.getEvent("pulse1", 3)));
-        assertTrue(e2.isIdenticalTo(track.getEvent("pulse1", 7)));
-        assertTrue(e3.isIdenticalTo(track.getEvent("pulse1", 10)));
-        assertTrue(e4.isIdenticalTo(track.getEvent("pulse2", 2)));
-        assertTrue(e5.isIdenticalTo(track.getEvent("pulse2", 4)));
-        assertTrue(e6.isIdenticalTo(track.getEvent("triangle", 1)));
-        assertTrue(e7.isIdenticalTo(track.getEvent("triangle", 8)));
-        assertTrue(e8.isIdenticalTo(track.getEvent("noise", 5)));
-        assertTrue(e9.isIdenticalTo(track.getEvent("noise", 6)));
-        assertTrue(e10.isIdenticalTo(track.getEvent("noise", 9)));
+        assertEquals(e1, track.getEvent("pulse1", 3));
+        assertEquals(e2, track.getEvent("pulse1", 7));
+        assertEquals(e3, track.getEvent("pulse1", 10));
+        assertEquals(e4, track.getEvent("pulse2", 2));
+        assertEquals(e5, track.getEvent("pulse2", 4));
+        assertEquals(e6, track.getEvent("triangle", 1));
+        assertEquals(e7, track.getEvent("triangle", 8));
+        assertEquals(e8, track.getEvent("noise", 5));
+        assertEquals(e9, track.getEvent("noise", 6));
+        assertEquals(e10, track.getEvent("noise", 9));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, track.numberOfBars());
     }
 
@@ -567,7 +567,7 @@ class TrackTest {
     }
 
     @Test
-    void testHashCode() {
+    void testEqualsSameObject() {
         assertEquals(track, track);
         assertEquals(track.hashCode(), track.hashCode());
     }

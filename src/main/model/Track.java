@@ -16,10 +16,10 @@ public class Track implements Writable {
 
     private String name;
     private int tempo;
-    private InstrumentChannel pulse1;
-    private InstrumentChannel pulse2;
-    private InstrumentChannel triangle;
-    private InstrumentChannel noise;
+    private final InstrumentChannel pulse1;
+    private final InstrumentChannel pulse2;
+    private final InstrumentChannel triangle;
+    private final InstrumentChannel noise;
 
     // REQUIRES: trackName has a length greater than 0
     // EFFECTS: creates a new empty 2 bar track with name trackName at 120 BPM
@@ -215,10 +215,10 @@ public class Track implements Writable {
         Track track = (Track) o;
         return tempo == track.tempo
                 && name.equals(track.name)
-                && pulse1.isIdenticalTo(track.pulse1)
-                && pulse2.isIdenticalTo(track.pulse2)
-                && triangle.isIdenticalTo(track.triangle)
-                && noise.isIdenticalTo(track.noise);
+                && pulse1.equals(track.pulse1)
+                && pulse2.equals(track.pulse2)
+                && triangle.equals(track.triangle)
+                && noise.equals(track.noise);
     }
 
     // EFFECTS: see super

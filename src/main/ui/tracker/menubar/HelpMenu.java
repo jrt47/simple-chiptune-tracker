@@ -9,15 +9,15 @@ import java.awt.event.ActionListener;
 // represents the tracker application help menu in the menu bar
 public class HelpMenu extends JMenu {
     private static final String HELP_MESSAGE =
-            "To add a note, enter a pitch (e.g. 'C', 'F#', 'A') followed by an octave ('1', '2', or '3')."
+            "To add a note, enter a pitch (e.g. 'C', 'F#', 'A') followed by an octave (1 - 5)."
                     + "\nOptionally, add an 'S' to the end to make the note staccato."
                     + "\n\nTo add a rest, enter 'S' or 'STOP'."
                     + "\n\nCurrently, only naturals and sharps are supported by the track editor. Please use sharps"
-                    + "\ninstead of flats for accidentals (e.g. use G# instead of Ab)."
-                    + "\n\nSharps are not accepted in places where naturals can be used (e.g. use C instead of B#)."
+                    + "\ninstead of flats for accidentals (e.g. use 'G#' instead of 'Ab')."
+                    + "\n\nSharps are not accepted in places where naturals can be used (e.g. use 'C' instead of 'B#')."
                     + "\n\nNote: All text entries are NOT case-sensitive.";
 
-    private TrackerApp trackerApp;
+    private final TrackerApp trackerApp;
     private JMenuItem helpButton;
 
     // EFFECTS: constructs and initializes the help menu

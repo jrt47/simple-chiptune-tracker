@@ -19,7 +19,7 @@ public class InstrumentChannelTest {
     void testConstructor() {
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
         for (int i = 1; i <= InstrumentChannel.INITIAL_NUM_OF_BARS * InstrumentChannel.ROWS_PER_BAR; i++) {
-            assertTrue(event.isIdenticalTo(channel.getEvent(i)));
+            assertEquals(event, channel.getEvent(i));
         }
     }
 
@@ -72,28 +72,28 @@ public class InstrumentChannelTest {
     void testGetEventBlank() {
         event.clear();
         channel.clear(1);
-        assertTrue(event.isIdenticalTo(channel.getEvent(1)));
+        assertEquals(event, channel.getEvent(1));
     }
 
     @Test
     void testGetEventRest() {
         event.makeRest();
         channel.addRest(5);
-        assertTrue(event.isIdenticalTo(channel.getEvent(5)));
+        assertEquals(event, channel.getEvent(5));
     }
 
     @Test
     void testGetEventNote() {
         event.makeNote(1);
         channel.addNote(10, 1);
-        assertTrue(event.isIdenticalTo(channel.getEvent(10)));
+        assertEquals(event, channel.getEvent(10));
     }
 
     @Test
     void testAddRest() {
         event.makeRest();
         channel.addRest(12);
-        assertTrue(event.isIdenticalTo(channel.getEvent(12)));
+        assertEquals(event, channel.getEvent(12));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -101,7 +101,7 @@ public class InstrumentChannelTest {
     void testAddNote() {
         event.makeNote(10);
         channel.addNote(3, 10);
-        assertTrue(event.isIdenticalTo(channel.getEvent(3)));
+        assertEquals(event, channel.getEvent(3));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -112,14 +112,14 @@ public class InstrumentChannelTest {
         }
         for (int i = 1; i <= 32; i++) {
             event.makeNote(i);
-            assertTrue(event.isIdenticalTo(channel.getEvent(i)));
+            assertEquals(event, channel.getEvent(i));
         }
     }
 
     @Test
     void testMakeStaccatoBlank() {
         assertFalse(channel.makeStaccato(8));
-        assertTrue(event.isIdenticalTo(channel.getEvent(8)));
+        assertEquals(event, channel.getEvent(8));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class InstrumentChannelTest {
         event.makeRest();
         channel.addRest(10);
         assertFalse(channel.makeStaccato(10));
-        assertTrue(event.isIdenticalTo(channel.getEvent(10)));
+        assertEquals(event, channel.getEvent(10));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class InstrumentChannelTest {
         event.makeStaccato();
         channel.addNote(2, 5);
         assertTrue(channel.makeStaccato(2));
-        assertTrue(event.isIdenticalTo(channel.getEvent(2)));
+        assertEquals(event, channel.getEvent(2));
     }
 
     @Test
@@ -146,13 +146,13 @@ public class InstrumentChannelTest {
         channel.addNote(16, 4);
         channel.makeStaccato(16);
         assertTrue(channel.makeStaccato(16));
-        assertTrue(event.isIdenticalTo(channel.getEvent(16)));
+        assertEquals(event, channel.getEvent(16));
     }
 
     @Test
     void testMakeNotStaccatoBlank() {
         assertFalse(channel.makeNotStaccato(14));
-        assertTrue(event.isIdenticalTo(channel.getEvent(14)));
+        assertEquals(event, channel.getEvent(14));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class InstrumentChannelTest {
         event.makeRest();
         channel.addRest(16);
         assertFalse(channel.makeNotStaccato(16));
-        assertTrue(event.isIdenticalTo(channel.getEvent(16)));
+        assertEquals(event, channel.getEvent(16));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class InstrumentChannelTest {
         event.makeNote(11);
         channel.addNote(3, 11);
         assertTrue(channel.makeNotStaccato(3));
-        assertTrue(event.isIdenticalTo(channel.getEvent(3)));
+        assertEquals(event, channel.getEvent(3));
     }
 
     @Test
@@ -177,13 +177,13 @@ public class InstrumentChannelTest {
         channel.addNote(12, 20);
         channel.makeStaccato(12);
         assertTrue(channel.makeNotStaccato(12));
-        assertTrue(event.isIdenticalTo(channel.getEvent(12)));
+        assertEquals(event, channel.getEvent(12));
     }
 
     @Test
     void testClearBlank() {
         channel.clear(7);
-        assertTrue(event.isIdenticalTo(channel.getEvent(7)));
+        assertEquals(event, channel.getEvent(7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -191,7 +191,7 @@ public class InstrumentChannelTest {
     void testClearRest() {
         channel.addRest(7);
         channel.clear(7);
-        assertTrue(event.isIdenticalTo(channel.getEvent(7)));
+        assertEquals(event, channel.getEvent(7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -199,7 +199,7 @@ public class InstrumentChannelTest {
     void testClearNote() {
         channel.addNote(7, 9);
         channel.clear(7);
-        assertTrue(event.isIdenticalTo(channel.getEvent(7)));
+        assertEquals(event, channel.getEvent(7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -208,7 +208,7 @@ public class InstrumentChannelTest {
         channel.addNote(7, 9);
         channel.makeStaccato(7);
         channel.clear(7);
-        assertTrue(event.isIdenticalTo(channel.getEvent(7)));
+        assertEquals(event, channel.getEvent(7));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -224,11 +224,11 @@ public class InstrumentChannelTest {
         rest.makeRest();
         Event note = new Event();
         note.makeNote(11);
-        assertTrue(rest.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(note.isIdenticalTo(channel.getEvent(2)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(3)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(4)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(5)));
+        assertEquals(rest, channel.getEvent(1));
+        assertEquals(note, channel.getEvent(2));
+        assertEquals(event, channel.getEvent(3));
+        assertEquals(event, channel.getEvent(4));
+        assertEquals(event, channel.getEvent(5));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -249,13 +249,13 @@ public class InstrumentChannelTest {
         note1.makeNote(6);
         Event note2 = new Event();
         note2.makeNote(10);
-        assertTrue(event.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(4)));
-        assertTrue(rest.isIdenticalTo(channel.getEvent(8)));
-        assertTrue(note1.isIdenticalTo(channel.getEvent(9)));
-        assertTrue(note2.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(12)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(18)));
+        assertEquals(event, channel.getEvent(1));
+        assertEquals(event, channel.getEvent(4));
+        assertEquals(rest, channel.getEvent(8));
+        assertEquals(note1, channel.getEvent(9));
+        assertEquals(note2, channel.getEvent(10));
+        assertEquals(event, channel.getEvent(12));
+        assertEquals(event, channel.getEvent(18));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -268,12 +268,12 @@ public class InstrumentChannelTest {
         channel.addNote(14, 10);
         channel.addRest(16);
         channel.clear();
-        assertTrue(event.isIdenticalTo(channel.getEvent(2)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(4)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(5)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(14)));
-        assertTrue(event.isIdenticalTo(channel.getEvent(16)));
+        assertEquals(event, channel.getEvent(2));
+        assertEquals(event, channel.getEvent(4));
+        assertEquals(event, channel.getEvent(5));
+        assertEquals(event, channel.getEvent(10));
+        assertEquals(event, channel.getEvent(14));
+        assertEquals(event, channel.getEvent(16));
         assertEquals(InstrumentChannel.INITIAL_NUM_OF_BARS, channel.numberOfBars());
     }
 
@@ -304,14 +304,14 @@ public class InstrumentChannelTest {
         e14.makeNote(11);
         Event e17 = new Event();
         e17.makeNote(Event.MAX_PITCH - 8);
-        assertTrue(e1.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(e3.isIdenticalTo(channel.getEvent(3)));
-        assertTrue(e4.isIdenticalTo(channel.getEvent(4)));
-        assertTrue(e8.isIdenticalTo(channel.getEvent(8)));
-        assertTrue(e10.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(e11.isIdenticalTo(channel.getEvent(11)));
-        assertTrue(e14.isIdenticalTo(channel.getEvent(14)));
-        assertTrue(e17.isIdenticalTo(channel.getEvent(17)));
+        assertEquals(e1, channel.getEvent(1));
+        assertEquals(e3, channel.getEvent(3));
+        assertEquals(e4, channel.getEvent(4));
+        assertEquals(e8, channel.getEvent(8));
+        assertEquals(e10, channel.getEvent(10));
+        assertEquals(e11, channel.getEvent(11));
+        assertEquals(e14, channel.getEvent(14));
+        assertEquals(e17, channel.getEvent(17));
     }
 
     @Test
@@ -341,14 +341,14 @@ public class InstrumentChannelTest {
         e15.makeNote(3);
         Event e16 = new Event();
         e16.makeRest();
-        assertTrue(e1.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(e2.isIdenticalTo(channel.getEvent(2)));
-        assertTrue(e5.isIdenticalTo(channel.getEvent(5)));
-        assertTrue(e8.isIdenticalTo(channel.getEvent(8)));
-        assertTrue(e10.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(e13.isIdenticalTo(channel.getEvent(13)));
-        assertTrue(e15.isIdenticalTo(channel.getEvent(15)));
-        assertTrue(e16.isIdenticalTo(channel.getEvent(16)));
+        assertEquals(e1, channel.getEvent(1));
+        assertEquals(e2, channel.getEvent(2));
+        assertEquals(e5, channel.getEvent(5));
+        assertEquals(e8, channel.getEvent(8));
+        assertEquals(e10, channel.getEvent(10));
+        assertEquals(e13, channel.getEvent(13));
+        assertEquals(e15, channel.getEvent(15));
+        assertEquals(e16, channel.getEvent(16));
     }
 
     @Test
@@ -378,14 +378,14 @@ public class InstrumentChannelTest {
         e14.makeNote(15);
         Event e17 = new Event();
         e17.makeNote(Event.MAX_PITCH - 6);
-        assertTrue(e1.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(e3.isIdenticalTo(channel.getEvent(3)));
-        assertTrue(e4.isIdenticalTo(channel.getEvent(4)));
-        assertTrue(e8.isIdenticalTo(channel.getEvent(8)));
-        assertTrue(e10.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(e11.isIdenticalTo(channel.getEvent(11)));
-        assertTrue(e14.isIdenticalTo(channel.getEvent(14)));
-        assertTrue(e17.isIdenticalTo(channel.getEvent(17)));
+        assertEquals(e1, channel.getEvent(1));
+        assertEquals(e3, channel.getEvent(3));
+        assertEquals(e4, channel.getEvent(4));
+        assertEquals(e8, channel.getEvent(8));
+        assertEquals(e10, channel.getEvent(10));
+        assertEquals(e11, channel.getEvent(11));
+        assertEquals(e14, channel.getEvent(14));
+        assertEquals(e17, channel.getEvent(17));
     }
 
     @Test
@@ -415,14 +415,14 @@ public class InstrumentChannelTest {
         e15.makeNote(Event.MAX_PITCH - 15);
         Event e16 = new Event();
         e16.makeRest();
-        assertTrue(e1.isIdenticalTo(channel.getEvent(1)));
-        assertTrue(e2.isIdenticalTo(channel.getEvent(2)));
-        assertTrue(e5.isIdenticalTo(channel.getEvent(5)));
-        assertTrue(e8.isIdenticalTo(channel.getEvent(8)));
-        assertTrue(e10.isIdenticalTo(channel.getEvent(10)));
-        assertTrue(e13.isIdenticalTo(channel.getEvent(13)));
-        assertTrue(e15.isIdenticalTo(channel.getEvent(15)));
-        assertTrue(e16.isIdenticalTo(channel.getEvent(16)));
+        assertEquals(e1, channel.getEvent(1));
+        assertEquals(e2, channel.getEvent(2));
+        assertEquals(e5, channel.getEvent(5));
+        assertEquals(e8, channel.getEvent(8));
+        assertEquals(e10, channel.getEvent(10));
+        assertEquals(e13, channel.getEvent(13));
+        assertEquals(e15, channel.getEvent(15));
+        assertEquals(e16, channel.getEvent(16));
     }
 
     void setupChannel1(InstrumentChannel channel) {
@@ -445,33 +445,45 @@ public class InstrumentChannelTest {
     }
 
     @Test
-    void testIsIdenticalToNotIdentical() {
+    void testEqualsNotIdentical() {
         InstrumentChannel channel1 = new InstrumentChannel();
         InstrumentChannel channel2 = new InstrumentChannel();
         setupChannel1(channel1);
         setupChannel2(channel2);
-        assertFalse(channel1.isIdenticalTo(channel2));
-        assertFalse(channel2.isIdenticalTo(channel1));
+        assertNotEquals(channel2, channel1);
+        assertNotEquals(channel1, channel2);
     }
 
     @Test
-    void testIsIdenticalToDifferentLengths() {
+    void testEqualsDifferentLengths() {
         InstrumentChannel channel1 = new InstrumentChannel();
         InstrumentChannel channel2 = new InstrumentChannel();
         setupChannel1(channel1);
         setupChannel2(channel2);
         channel2.addBars(1);
-        assertFalse(channel1.isIdenticalTo(channel2));
-        assertFalse(channel2.isIdenticalTo(channel1));
+        assertNotEquals(channel2, channel1);
+        assertNotEquals(channel1, channel2);
     }
 
     @Test
-    void testIsIdenticalToIdentical() {
+    void testEqualsIdentical() {
         InstrumentChannel channel1 = new InstrumentChannel();
         InstrumentChannel channel2 = new InstrumentChannel();
         setupChannel1(channel1);
         setupChannel1(channel2);
-        assertTrue(channel1.isIdenticalTo(channel2));
-        assertTrue(channel2.isIdenticalTo(channel1));
+        assertEquals(channel2, channel1);
+        assertEquals(channel1, channel2);
+        assertEquals(channel1.hashCode(), channel2.hashCode());
+    }
+
+    @Test
+    void testEqualsDifferentClasses() {
+        assertNotEquals(channel, new Object());
+    }
+
+    @Test
+    void testEqualsSameObject() {
+        assertEquals(channel, channel);
+        assertEquals(channel.hashCode(), channel.hashCode());
     }
 }

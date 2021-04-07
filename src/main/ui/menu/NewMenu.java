@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 // Represents the new menu card for the tracker application menu
 public class NewMenu extends JPanel {
-    private MainMenu mainMenu;
+    private final MainMenu mainMenu;
 
     private JTextField textField;
     private JButton createButton;

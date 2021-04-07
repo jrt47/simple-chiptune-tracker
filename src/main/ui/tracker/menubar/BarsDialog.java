@@ -12,8 +12,8 @@ import java.awt.event.ActionListener;
 public class BarsDialog extends JDialog {
     private static final Dimension WINDOW_SIZE = new Dimension(220, 120);
 
-    private TrackerApp trackerApp;
-    private String type;
+    private final TrackerApp trackerApp;
+    private final String type;
 
     private JSpinner spinner;
     private JButton okButton;

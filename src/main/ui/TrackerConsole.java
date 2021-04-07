@@ -22,9 +22,9 @@ public class TrackerConsole {
     private Tracker tracker;
     private Track selectedTrack;
     private int selectedPage;
-    private Scanner input;
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
+    private final Scanner input;
+    private final JsonWriter jsonWriter;
+    private final JsonReader jsonReader;
 
     // EFFECTS: initializes and runs the tracker app
     public TrackerConsole() {

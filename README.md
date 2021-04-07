@@ -8,7 +8,7 @@ additional complexities of professional music tracker software. The application 
 make old-style chiptune music but has little experience using music trackers.
 
 Users will be able to program up to four instrument channels, including:
-- Two pulse waves of variable pulse width
+- Two pulse waves
 - A triangle wave
 - A noise generator
 
@@ -33,3 +33,4 @@ barrier. I am excited to start using the application when it is finished.
 - As a user, I want to be able to save each of my tracks to file
 - As a user, I want to be able to load each of my tracks from file
 - As a user, I want to be able to delete each of my tracks from file
+
