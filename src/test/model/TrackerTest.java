@@ -121,8 +121,6 @@ public class TrackerTest {
         assertFalse(tracker.getTrackList().contains(track3));
     }
 
-    // TODO: delete all tests after this point
-
     @Test
     void testAddOne() {
         tracker.add(track1);

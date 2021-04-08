@@ -39,3 +39,18 @@ barrier. I am excited to start using the application when it is finished.
 I chose to implement a type hierarchy in the sound package of the ui package. The classes NoiseOscillator,
 PulseOscillator, and TriangleOscillator all have distinct functionality and extend the abstract class called
 Oscillator.
+
+## Phase 4: Task 3
+
+If I had more time to work on the project, there are several things I could refactor to improve the design of my code:
+
+- Increase cohesion by splitting the MainMenu class into two separate classes, one that represents the entire menu window
+and another that represents the main menu card
+- Remove unnecessary code by deleting the InstrumentChannel class and replacing it with a list of events in Track
+- Remove the associations between TrackPlayer and Track / ToolBar and have TrackPlayer access these objects through the
+TrackerApp
+- Extract duplication from NewMenu and LoadMenu to an abstract MenuCard superclass
+- Extract duplication from FileMenu, EditMenu, and HelpMenu to an abstract MenuBarMenu superclass
+- Increase cohesion by making Event abstract and creating Note, Rest, and Blank classes that extend Event
+- Create a ChannelName enum instead of using strings to represent channel names to improve readability
+- Make Tracker implement Iterable instead of accessing the list of tracks in the tracker directly to iterate over

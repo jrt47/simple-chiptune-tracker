@@ -45,8 +45,6 @@ public class Tracker implements Writable {
         trackList.remove(track);
     }
 
-    // TODO: Remove all methods after this point (besides persistence methods)
-
     // EFFECTS: returns the number of tracks in the tracker
     public int numberOfTracks() {
         return trackList.size();
@@ -90,6 +88,7 @@ public class Tracker implements Writable {
 
     // EFFECTS: returns events in this channel as a JSON array
     // (modelled after JsonSerializationDemo repository)
+    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private JSONArray trackListToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Track track : trackList) {

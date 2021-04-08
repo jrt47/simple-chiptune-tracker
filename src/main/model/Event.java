@@ -145,6 +145,7 @@ public class Event implements Writable {
 
     // EFFECTS: returns this as JSON object
     // (modelled after JsonSerializationDemo repository)
+    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
