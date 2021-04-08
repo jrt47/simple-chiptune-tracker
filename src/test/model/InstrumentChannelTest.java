@@ -482,6 +482,11 @@ public class InstrumentChannelTest {
     }
 
     @Test
+    void testEqualsNull() {
+        assertNotEquals(channel, null);
+    }
+
+    @Test
     void testEqualsSameObject() {
         assertEquals(channel, channel);
         assertEquals(channel.hashCode(), channel.hashCode());

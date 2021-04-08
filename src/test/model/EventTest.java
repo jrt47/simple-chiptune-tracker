@@ -356,6 +356,11 @@ public class EventTest {
     }
 
     @Test
+    void testEqualsNull() {
+        assertNotEquals(event, null);
+    }
+
+    @Test
     void testEqualsDifferentClasses() {
         assertNotEquals(event, new Object());
     }
