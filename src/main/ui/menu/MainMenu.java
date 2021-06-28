@@ -66,8 +66,6 @@ public class MainMenu extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: loads tracker from file
-    // (modelled after JsonSerializationDemo repository)
-    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private void loadTracker() {
         try {
             tracker = jsonReader.read();
@@ -77,8 +75,6 @@ public class MainMenu extends JFrame {
     }
 
     // EFFECTS: saves the tracker to file
-    // (modelled after JsonSerializationDemo repository)
-    // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private void saveTracker() {
         try {
             jsonWriter.open();

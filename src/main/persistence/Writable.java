@@ -2,8 +2,7 @@ package persistence;
 
 import org.json.JSONObject;
 
-// modelled after JsonSerializationDemo repository
-// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+// represents a writable class
 public interface Writable {
     // EFFECTS: returns this as JSON object
     JSONObject toJson();
